@@ -17,8 +17,13 @@ class FixCheckSumDecoderTest {
     }
 
     @Test
-    void character() {
-        decodeInvalid("12c\u0001");
+    void tooLowByte() {
+        decodeInvalid("/23\u0001");
+    }
+
+    @Test
+    void tooHighByte() {
+        decodeInvalid("12:\u0001");
     }
 
     @Test

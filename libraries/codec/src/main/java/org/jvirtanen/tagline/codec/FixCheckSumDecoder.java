@@ -17,7 +17,7 @@ class FixCheckSumDecoder {
         int c = ((bits & 0xff00) >> 8) - '0';
         int d = bits & 0xff;
 
-        if (a > 9 || b > 9 || c > 9 || d != SOH)
+        if (a < 0 || a > 9 || b < 0 || b > 9 || c < 0 || c > 9 || d != SOH)
             notCheckSum();
 
         return 100 * a + 10 * b + c;
