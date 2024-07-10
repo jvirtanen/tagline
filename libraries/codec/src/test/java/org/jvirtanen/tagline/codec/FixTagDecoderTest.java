@@ -45,6 +45,11 @@ class FixTagDecoderTest {
     }
 
     @Test
+    void zero() {
+        assertInvalidTag("0=");
+    }
+
+    @Test
     void leadingZero() {
         assertInvalidTag("01=");
     }
