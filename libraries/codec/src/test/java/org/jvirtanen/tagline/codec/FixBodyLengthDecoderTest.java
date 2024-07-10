@@ -35,35 +35,35 @@ class FixBodyLengthDecoderTest {
 
     @Test
     void zero() {
-        assertEquals(1, decode("0\u0001"));
+        assertEquals(2, decode("0\u0001"));
 
         assertEquals(0, decoder.bodyLength());
     }
 
     @Test
     void oneDigit() {
-        assertEquals(1, decode("1\u0001"));
+        assertEquals(2, decode("1\u0001"));
 
         assertEquals(1, decoder.bodyLength());
     }
 
     @Test
     void twoDigits() {
-        assertEquals(2, decode("12\u0001"));
+        assertEquals(3, decode("12\u0001"));
 
         assertEquals(12, decoder.bodyLength());
     }
 
     @Test
     void threeDigits() {
-        assertEquals(3, decode("123\u0001"));
+        assertEquals(4, decode("123\u0001"));
 
         assertEquals(123, decoder.bodyLength());
     }
 
     @Test
     void maxValue() {
-        assertEquals(10, decode(String.format("%s\u0001", Integer.MAX_VALUE)));
+        assertEquals(11, decode(String.format("%s\u0001", Integer.MAX_VALUE)));
 
         assertEquals(Integer.MAX_VALUE, decoder.bodyLength());
     }

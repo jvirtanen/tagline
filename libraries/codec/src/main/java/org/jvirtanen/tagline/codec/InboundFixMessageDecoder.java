@@ -68,13 +68,13 @@ public class InboundFixMessageDecoder extends ByteToMessageDecoder {
                 return;
             }
 
-            int bodyLengthSohIndex = bodyLengthDecoder.decode(in, bodyLengthValueIndex, startIndex + readableBytes - bodyLengthValueIndex);
-            if (bodyLengthSohIndex < 0)
+            int bodyIndex = bodyLengthDecoder.decode(in, bodyLengthValueIndex, startIndex + readableBytes - bodyLengthValueIndex);
+            if (bodyIndex < 0)
                 return;
 
             int bodyLength = bodyLengthDecoder.bodyLength();
 
-            int trailerIndex = bodyLengthSohIndex + 1 + bodyLength;
+            int trailerIndex = bodyIndex + bodyLength;
             int checkSumValueIndex = trailerIndex + 3;
             int endIndex = trailerIndex + 7;
 
@@ -89,7 +89,7 @@ public class InboundFixMessageDecoder extends ByteToMessageDecoder {
 
             var version = versionDecoder.version();
             var content = in.retainedSlice(startIndex, trailerIndex - startIndex);
-            int bodyOffset = bodyLengthSohIndex + 1 - startIndex;
+            int bodyOffset = bodyIndex - startIndex;
             int checkSum = FixCheckSumDecoder.decode(in, checkSumValueIndex);
 
             var message = new DefaultInboundFixMessage(version, content, bodyOffset, checkSum);
