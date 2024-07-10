@@ -48,7 +48,7 @@ class FixVersionDecoder implements ByteProcessor {
         if (version == null || !version.equals(bytes, count))
             version = FixVersion.fromBytes(bytes, count);
 
-        return sohIndex;
+        return sohIndex + 1;
     }
 
     @Override

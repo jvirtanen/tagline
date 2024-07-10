@@ -33,18 +33,18 @@ class FixVersionDecoderTest {
 
     @Test
     void complete() {
-        assertEquals(7, decode("FIX.4.2\u0001"));
+        assertEquals(8, decode("FIX.4.2\u0001"));
         assertEquals(FIX_4_2, decoder.version());
     }
 
     @Test
     void equals() {
-        assertEquals(7, decode("FIX.4.2\u0001"));
+        assertEquals(8, decode("FIX.4.2\u0001"));
 
         var firstVersion = decoder.version();
         int firstHashCode = System.identityHashCode(firstVersion);
 
-        assertEquals(7, decode("FIX.4.2\u0001"));
+        assertEquals(8, decode("FIX.4.2\u0001"));
 
         var secondVersion = decoder.version();
         int secondHashCode = System.identityHashCode(secondVersion);
@@ -55,15 +55,15 @@ class FixVersionDecoderTest {
 
     @Test
     void doesNotEqual() {
-        assertEquals(7, decode("FIX.4.2\u0001"));
+        assertEquals(8, decode("FIX.4.2\u0001"));
 
-        assertEquals(8, decode("FIXT.1.1\u0001"));
+        assertEquals(9, decode("FIXT.1.1\u0001"));
         assertEquals(FIXT_1_1, decoder.version());
     }
 
     @Test
     void expand() {
-        assertEquals(20, decode("aaaaaaaaaaaaaaaaaaaa\u0001"));
+        assertEquals(21, decode("aaaaaaaaaaaaaaaaaaaa\u0001"));
     }
 
     @Test

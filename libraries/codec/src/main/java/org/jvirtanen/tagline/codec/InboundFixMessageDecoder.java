@@ -53,16 +53,16 @@ public class InboundFixMessageDecoder extends ByteToMessageDecoder {
         int beginStringValueIndex = startIndex + 2;
 
         try {
-            int beginStringSohIndex = versionDecoder.decode(in, beginStringValueIndex, startIndex + readableBytes - beginStringValueIndex);
-            if (beginStringSohIndex < 0)
+            int bodyLengthIndex = versionDecoder.decode(in, beginStringValueIndex, startIndex + readableBytes - beginStringValueIndex);
+            if (bodyLengthIndex < 0)
                 return;
 
-            int bodyLengthValueIndex = beginStringSohIndex + 3;
+            int bodyLengthValueIndex = bodyLengthIndex + 2;
 
             if (readableBytes < bodyLengthValueIndex - startIndex)
                 return;
 
-            if (in.getShort(beginStringSohIndex + 1) != BODY_LENGTH_SHORT) {
+            if (in.getShort(bodyLengthIndex) != BODY_LENGTH_SHORT) {
                 decodeGarbled(in, out);
 
                 return;
