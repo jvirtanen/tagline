@@ -7,20 +7,20 @@ import static org.jvirtanen.tagline.codec.FixConstants.*;
 
 class FixIntDecoder {
 
-    private static final int MIN_NEGATIVE_EXACT_LENGTH = 20;
-    private static final int MIN_POSITIVE_EXACT_LENGTH = 19;
+    private static final int MAX_NEGATIVE_LENGTH = 20;
+    private static final int MAX_POSITIVE_LENGTH = 19;
 
     static long decode(final byte[] bytes, final int length) {
         if (length == 0)
             notInt();
 
         if (bytes[0] == '-') {
-            if (length >= MIN_NEGATIVE_EXACT_LENGTH)
+            if (length >= MAX_NEGATIVE_LENGTH)
                 return decodeNegativeExact(bytes, length);
             else
                 return decodeNegative(bytes, length);
         } else {
-            if (length >= MIN_POSITIVE_EXACT_LENGTH)
+            if (length >= MAX_POSITIVE_LENGTH)
                 return decodePositiveExact(bytes, length);
             else
                 return decodePositive(bytes, length);
@@ -42,7 +42,7 @@ class FixIntDecoder {
     }
 
     private static long decodePositiveExact(final byte[] bytes, final int length) {
-        if (length > MIN_POSITIVE_EXACT_LENGTH)
+        if (length > MAX_POSITIVE_LENGTH)
             tooLargeInt();
 
         long value = 0;
@@ -80,7 +80,7 @@ class FixIntDecoder {
     }
 
     private static long decodeNegativeExact(final byte[] bytes, final int length) {
-        if (length > MIN_NEGATIVE_EXACT_LENGTH)
+        if (length > MAX_NEGATIVE_LENGTH)
             tooSmallInt();
 
         long value = 0;
