@@ -62,15 +62,29 @@ class FixIntDecoderTest {
     }
 
     @Test
-    void tooSmallValue() {
+    void negativeAdditionOverflow() {
         var tooSmallValue = BigInteger.valueOf(Long.MIN_VALUE).subtract(BigInteger.ONE);
 
         assertNotInt(tooSmallValue.toString(), "Too small Int");
     }
 
     @Test
-    void tooLargeValue() {
+    void negativeMultiplicationOverflow() {
+        var tooSmallValue = BigInteger.valueOf(Long.MIN_VALUE).subtract(BigInteger.TEN);
+
+        assertNotInt(tooSmallValue.toString(), "Too small Int");
+    }
+
+    @Test
+    void positiveAdditionOverflow() {
         var tooLargeValue = BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.ONE);
+
+        assertNotInt(tooLargeValue.toString(), "Too large Int");
+    }
+
+    @Test
+    void positiveMultiplicationOverflow() {
+        var tooLargeValue = BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.TEN);
 
         assertNotInt(tooLargeValue.toString(), "Too large Int");
     }
