@@ -22,7 +22,7 @@ class FixBodyLengthDecoder implements ByteProcessor {
         if (sohIndex - index < 1)
             notBodyLength();
 
-        return sohIndex;
+        return sohIndex + 1;
     }
 
     int bodyLength() {

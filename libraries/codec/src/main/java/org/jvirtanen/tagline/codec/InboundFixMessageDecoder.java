@@ -53,28 +53,28 @@ public class InboundFixMessageDecoder extends ByteToMessageDecoder {
         int beginStringValueIndex = startIndex + 2;
 
         try {
-            int beginStringSohIndex = versionDecoder.decode(in, beginStringValueIndex, startIndex + readableBytes - beginStringValueIndex);
-            if (beginStringSohIndex < 0)
+            int bodyLengthIndex = versionDecoder.decode(in, beginStringValueIndex, startIndex + readableBytes - beginStringValueIndex);
+            if (bodyLengthIndex < 0)
                 return;
 
-            int bodyLengthValueIndex = beginStringSohIndex + 3;
+            int bodyLengthValueIndex = bodyLengthIndex + 2;
 
             if (readableBytes < bodyLengthValueIndex - startIndex)
                 return;
 
-            if (in.getShort(beginStringSohIndex + 1) != BODY_LENGTH_SHORT) {
+            if (in.getShort(bodyLengthIndex) != BODY_LENGTH_SHORT) {
                 decodeGarbled(in, out);
 
                 return;
             }
 
-            int bodyLengthSohIndex = bodyLengthDecoder.decode(in, bodyLengthValueIndex, startIndex + readableBytes - bodyLengthValueIndex);
-            if (bodyLengthSohIndex < 0)
+            int bodyIndex = bodyLengthDecoder.decode(in, bodyLengthValueIndex, startIndex + readableBytes - bodyLengthValueIndex);
+            if (bodyIndex < 0)
                 return;
 
             int bodyLength = bodyLengthDecoder.bodyLength();
 
-            int trailerIndex = bodyLengthSohIndex + 1 + bodyLength;
+            int trailerIndex = bodyIndex + bodyLength;
             int checkSumValueIndex = trailerIndex + 3;
             int endIndex = trailerIndex + 7;
 
@@ -89,7 +89,7 @@ public class InboundFixMessageDecoder extends ByteToMessageDecoder {
 
             var version = versionDecoder.version();
             var content = in.retainedSlice(startIndex, trailerIndex - startIndex);
-            int bodyOffset = bodyLengthSohIndex + 1 - startIndex;
+            int bodyOffset = bodyIndex - startIndex;
             int checkSum = FixCheckSumDecoder.decode(in, checkSumValueIndex);
 
             var message = new DefaultInboundFixMessage(version, content, bodyOffset, checkSum);
