@@ -53,7 +53,7 @@ class FixIntDecoder {
                 notInt();
 
             try {
-                value = Math.addExact(value * 10, b - '0');
+                value = Math.addExact(Math.multiplyExact(value, 10), b - '0');
             } catch (ArithmeticException e) {
                 tooLargeInt();
             }
@@ -91,7 +91,7 @@ class FixIntDecoder {
                 notInt();
 
             try {
-                value = Math.addExact(value * 10, '0' - b);
+                value = Math.addExact(Math.multiplyExact(value, 10), '0' - b);
             } catch (ArithmeticException e) {
                 tooSmallInt();
             }
