@@ -63,30 +63,44 @@ class FixIntDecoderTest {
 
     @Test
     void negativeAdditionOverflow() {
-        var tooSmallValue = BigInteger.valueOf(Long.MIN_VALUE).subtract(BigInteger.ONE);
+        var value = BigInteger.valueOf(Long.MIN_VALUE).subtract(BigInteger.ONE);
 
-        assertNotInt(tooSmallValue.toString(), "Too small Int");
+        assertNotInt(value.toString(), "Too small Int");
     }
 
     @Test
     void negativeMultiplicationOverflow() {
-        var tooSmallValue = BigInteger.valueOf(Long.MIN_VALUE).subtract(BigInteger.TEN);
+        var value = BigInteger.valueOf(Long.MIN_VALUE).subtract(BigInteger.TEN);
 
-        assertNotInt(tooSmallValue.toString(), "Too small Int");
+        assertNotInt(value.toString(), "Too small Int");
+    }
+
+    @Test
+    void negativeLengthOverflow() {
+        var value = BigInteger.valueOf(Long.MIN_VALUE).multiply(BigInteger.TEN);
+
+        assertNotInt(value.toString(), "Too small Int");
     }
 
     @Test
     void positiveAdditionOverflow() {
-        var tooLargeValue = BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.ONE);
+        var value = BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.ONE);
 
-        assertNotInt(tooLargeValue.toString(), "Too large Int");
+        assertNotInt(value.toString(), "Too large Int");
     }
 
     @Test
     void positiveMultiplicationOverflow() {
-        var tooLargeValue = BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.TEN);
+        var value = BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.TEN);
 
-        assertNotInt(tooLargeValue.toString(), "Too large Int");
+        assertNotInt(value.toString(), "Too large Int");
+    }
+
+    @Test
+    void positiveLengthOverflow() {
+        var value = BigInteger.valueOf(Long.MAX_VALUE).multiply(BigInteger.TEN);
+
+        assertNotInt(value.toString(), "Too large Int");
     }
 
     @Test
