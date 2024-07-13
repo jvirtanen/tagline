@@ -59,12 +59,12 @@ class FixMediumEncoderTest {
 
     @Test
     void tooSmallMedium() {
-        assertNotMedium(-1, EQUALS, "Negative integer");
+        assertNotMedium("Negative integer", -1, EQUALS);
     }
 
     @Test
     void tooLargeMedium() {
-        assertNotMedium(12345678, EQUALS, "Too large integer");
+        assertNotMedium("Too large integer", 12345678, EQUALS);
     }
 
     private static String encode(final int value, final byte separator) {
@@ -75,7 +75,7 @@ class FixMediumEncoderTest {
         return buffer.toString(ISO_8859_1);
     }
 
-    private static void assertNotMedium(final int value, final byte separator, final String message) {
+    private static void assertNotMedium(final String message, final int value, final byte separator) {
         var exception = assertThrows(IllegalArgumentException.class, () -> encode(value, separator));
 
         assertEquals(message, exception.getMessage());
