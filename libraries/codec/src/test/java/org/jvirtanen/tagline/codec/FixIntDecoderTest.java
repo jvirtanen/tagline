@@ -65,57 +65,57 @@ class FixIntDecoderTest {
     void negativeAdditionOverflow() {
         var value = BigInteger.valueOf(Long.MIN_VALUE).subtract(BigInteger.ONE);
 
-        assertNotInt(value.toString(), "Too small Int");
+        assertNotInt("Too small Int", value.toString());
     }
 
     @Test
     void negativeMultiplicationOverflow() {
         var value = BigInteger.valueOf(Long.MIN_VALUE).subtract(BigInteger.TEN);
 
-        assertNotInt(value.toString(), "Too small Int");
+        assertNotInt("Too small Int", value.toString());
     }
 
     @Test
     void negativeLengthOverflow() {
         var value = BigInteger.valueOf(Long.MIN_VALUE).multiply(BigInteger.TEN);
 
-        assertNotInt(value.toString(), "Too small Int");
+        assertNotInt("Too small Int", value.toString());
     }
 
     @Test
     void positiveAdditionOverflow() {
         var value = BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.ONE);
 
-        assertNotInt(value.toString(), "Too large Int");
+        assertNotInt("Too large Int", value.toString());
     }
 
     @Test
     void positiveMultiplicationOverflow() {
         var value = BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.TEN);
 
-        assertNotInt(value.toString(), "Too large Int");
+        assertNotInt("Too large Int", value.toString());
     }
 
     @Test
     void positiveLengthOverflow() {
         var value = BigInteger.valueOf(Long.MAX_VALUE).multiply(BigInteger.TEN);
 
-        assertNotInt(value.toString(), "Too large Int");
+        assertNotInt("Too large Int", value.toString());
     }
 
     @Test
     void empty() {
-        assertNotInt("", "Not an Int");
+        assertNotInt("Not an Int", "");
     }
 
     @Test
     void minus() {
-        assertNotInt("-", "Not an Int");
+        assertNotInt("Not an Int", "-");
     }
 
     @Test
     void invalidByte() {
-        assertNotInt("Y", "Not an Int");
+        assertNotInt("Not an Int", "Y");
     }
 
     private static long decode(final String value) {
@@ -124,7 +124,7 @@ class FixIntDecoderTest {
         return FixIntDecoder.decode(bytes, bytes.length);
     }
 
-    private static void assertNotInt(final String value, final String message) {
+    private static void assertNotInt(final String message, final String value) {
         var exception = assertThrows(FixDecoderException.class, () -> decode(value));
 
         assertEquals(message, exception.getMessage());
