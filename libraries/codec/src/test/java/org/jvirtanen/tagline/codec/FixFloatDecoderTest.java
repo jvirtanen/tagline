@@ -76,14 +76,14 @@ class FixFloatDecoderTest {
     void minUnscaledValue() {
         var value = BigDecimal.valueOf(Long.MIN_VALUE).movePointLeft(18);
 
-        assertEquals(of(Long.MIN_VALUE, 18), decode(value.toString()));
+        assertEquals(of(Long.MIN_VALUE, 18), decode(value.toPlainString()));
     }
 
     @Test
     void maxUnscaledValue() {
         var value = BigDecimal.valueOf(Long.MAX_VALUE).movePointLeft(18);
 
-        assertEquals(of(Long.MAX_VALUE, 18), decode(value.toString()));
+        assertEquals(of(Long.MAX_VALUE, 18), decode(value.toPlainString()));
     }
 
     @Test
@@ -107,14 +107,14 @@ class FixFloatDecoderTest {
     void negativeUnscaledMultiplicationOverflow() {
         var value = BigDecimal.valueOf(Long.MIN_VALUE).subtract(BigDecimal.TEN).movePointLeft(9);
 
-        assertNotFloat("Unrepresentable Float", value.toString());
+        assertNotFloat("Unrepresentable Float", value.toPlainString());
     }
 
     @Test
     void negativeUnscaledLengthOverflow() {
         var value = BigDecimal.valueOf(Long.MIN_VALUE).multiply(BigDecimal.TEN).movePointLeft(18);
 
-        assertNotFloat("Unrepresentable Float", value.toString());
+        assertNotFloat("Unrepresentable Float", value.toPlainString());
     }
 
     @Test
@@ -128,28 +128,28 @@ class FixFloatDecoderTest {
     void positiveUnscaledMultiplicationOverflow() {
         var value = BigDecimal.valueOf(Long.MAX_VALUE).add(BigDecimal.TEN).movePointLeft(9);
 
-        assertNotFloat("Unrepresentable Float", value.toString());
+        assertNotFloat("Unrepresentable Float", value.toPlainString());
     }
 
     @Test
     void positiveUnscaledLengthOverflow() {
         var value = BigDecimal.valueOf(Long.MAX_VALUE).multiply(BigDecimal.TEN).movePointLeft(18);
 
-        assertNotFloat("Unrepresentable Float", value.toString());
+        assertNotFloat("Unrepresentable Float", value.toPlainString());
     }
 
     @Test
     void negativeScaleOverflow() {
         var value = BigDecimal.valueOf(Long.MIN_VALUE).movePointLeft(19);
 
-        assertNotFloat("Unrepresentable Float", value.toString());
+        assertNotFloat("Unrepresentable Float", value.toPlainString());
     }
 
     @Test
     void positiveScaleOverflow() {
         var value = BigDecimal.valueOf(Long.MAX_VALUE).movePointLeft(19);
 
-        assertNotFloat("Unrepresentable Float", value.toString());
+        assertNotFloat("Unrepresentable Float", value.toPlainString());
     }
 
     @Test
