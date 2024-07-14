@@ -139,15 +139,15 @@ class FixFloatDecoderTest {
     }
 
     @Test
-    void tooSmallUnscaledValue() {
-        var value = BigDecimal.valueOf(Long.MIN_VALUE).subtract(BigDecimal.ONE).movePointLeft(18);
+    void negativeScaleOverflow() {
+        var value = BigDecimal.valueOf(Long.MIN_VALUE).movePointLeft(19);
 
         assertNotFloat("Unrepresentable Float", value.toString());
     }
 
     @Test
-    void tooLargeUnscaledValue() {
-        var value = BigDecimal.valueOf(Long.MAX_VALUE).add(BigDecimal.ONE).movePointLeft(18);
+    void positiveScaleOverflow() {
+        var value = BigDecimal.valueOf(Long.MAX_VALUE).movePointLeft(19);
 
         assertNotFloat("Unrepresentable Float", value.toString());
     }

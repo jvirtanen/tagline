@@ -10,6 +10,9 @@ class FixFloatDecoder {
     private static final int MIN_NEGATIVE_EXACT_LENGTH = 20;
     private static final int MIN_POSITIVE_EXACT_LENGTH = 19;
 
+    private static final int MAX_NEGATIVE_LENGTH = 21;
+    private static final int MAX_POSITIVE_LENGTH = 20;
+
     static void decode(final byte[] bytes, final int length, final FixFloat container) {
         if (length == 0)
             notFloat();
@@ -65,6 +68,9 @@ class FixFloatDecoder {
     }
 
     private static void decodePositiveExact(final byte[] bytes, final int length, final FixFloat container) {
+        if (length > MAX_POSITIVE_LENGTH)
+            unrepresentableFloat();
+
         byte b = bytes[0];
         if (b < '0' || b > '9')
             notFloat();
@@ -151,6 +157,9 @@ class FixFloatDecoder {
     }
 
     private static void decodeNegativeExact(final byte[] bytes, final int length, final FixFloat container) {
+        if (length > MAX_NEGATIVE_LENGTH)
+            unrepresentableFloat();
+
         byte b = bytes[1];
         if (b < '0' || b > '9')
             notFloat();
