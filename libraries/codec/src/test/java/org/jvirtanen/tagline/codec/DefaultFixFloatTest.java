@@ -94,6 +94,16 @@ class DefaultFixFloatTest {
         assertEquals((double)Long.MAX_VALUE, of(Long.MAX_VALUE, 0).doubleValue());
     }
 
+    @Test
+    void smallestPositiveValueAsString() {
+        assertEquals("0.000000000000000001", of(1, 18).toString());
+    }
+
+    @Test
+    void smallestNegativeValueAsString() {
+        assertEquals("-0.000000000000000001", of(-1, 18).toString());
+    }
+
     private static DefaultFixFloat of(final long unscaledValue, final int scale) {
         return new DefaultFixFloat(unscaledValue, scale);
     }
