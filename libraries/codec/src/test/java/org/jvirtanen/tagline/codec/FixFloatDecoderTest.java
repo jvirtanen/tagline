@@ -97,17 +97,45 @@ class FixFloatDecoderTest {
     }
 
     @Test
-    void tooSmallValue() {
-        var tooSmallValue = BigInteger.valueOf(Long.MIN_VALUE).subtract(BigInteger.ONE);
+    void negativeUnscaledAdditionOverflow() {
+        var value = BigInteger.valueOf(Long.MIN_VALUE).subtract(BigInteger.ONE);
 
-        assertNotFloat("Unrepresentable Float", tooSmallValue.toString());
+        assertNotFloat("Unrepresentable Float", value.toString());
     }
 
     @Test
-    void tooLargeValue() {
-        var tooLargeValue = BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.ONE);
+    void negativeUnscaledMultiplicationOverflow() {
+        var value = BigDecimal.valueOf(Long.MIN_VALUE).subtract(BigDecimal.TEN).movePointLeft(9);
 
-        assertNotFloat("Unrepresentable Float", tooLargeValue.toString());
+        assertNotFloat("Unrepresentable Float", value.toString());
+    }
+
+    @Test
+    void negativeUnscaledLengthOverflow() {
+        var value = BigDecimal.valueOf(Long.MIN_VALUE).multiply(BigDecimal.TEN).movePointLeft(18);
+
+        assertNotFloat("Unrepresentable Float", value.toString());
+    }
+
+    @Test
+    void positiveUnscaledAdditionOverflow() {
+        var value = BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.ONE);
+
+        assertNotFloat("Unrepresentable Float", value.toString());
+    }
+
+    @Test
+    void positiveUnscaledMultiplicationOverflow() {
+        var value = BigDecimal.valueOf(Long.MAX_VALUE).add(BigDecimal.TEN).movePointLeft(9);
+
+        assertNotFloat("Unrepresentable Float", value.toString());
+    }
+
+    @Test
+    void positiveUnscaledLengthOverflow() {
+        var value = BigDecimal.valueOf(Long.MAX_VALUE).multiply(BigDecimal.TEN).movePointLeft(18);
+
+        assertNotFloat("Unrepresentable Float", value.toString());
     }
 
     @Test
