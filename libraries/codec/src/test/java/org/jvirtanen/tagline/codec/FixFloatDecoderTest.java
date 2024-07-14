@@ -76,14 +76,14 @@ class FixFloatDecoderTest {
     void minUnscaledValue() {
         var value = BigDecimal.valueOf(Long.MIN_VALUE).movePointLeft(18);
 
-        assertEquals(of(Long.MIN_VALUE, 18), decode(value.toString()));
+        assertEquals(of(Long.MIN_VALUE, 18), decode(value.toPlainString()));
     }
 
     @Test
     void maxUnscaledValue() {
         var value = BigDecimal.valueOf(Long.MAX_VALUE).movePointLeft(18);
 
-        assertEquals(of(Long.MAX_VALUE, 18), decode(value.toString()));
+        assertEquals(of(Long.MAX_VALUE, 18), decode(value.toPlainString()));
     }
 
     @Test
@@ -97,76 +97,104 @@ class FixFloatDecoderTest {
     }
 
     @Test
-    void tooSmallValue() {
-        var tooSmallValue = BigInteger.valueOf(Long.MIN_VALUE).subtract(BigInteger.ONE);
+    void negativeUnscaledAdditionOverflow() {
+        var value = BigInteger.valueOf(Long.MIN_VALUE).subtract(BigInteger.ONE);
 
-        assertUnrepresentableFloat(tooSmallValue.toString());
+        assertNotFloat("Unrepresentable Float", value.toString());
     }
 
     @Test
-    void tooLargeValue() {
-        var tooLargeValue = BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.ONE);
+    void negativeUnscaledMultiplicationOverflow() {
+        var value = BigDecimal.valueOf(Long.MIN_VALUE).subtract(BigDecimal.TEN).movePointLeft(9);
 
-        assertUnrepresentableFloat(tooLargeValue.toString());
+        assertNotFloat("Unrepresentable Float", value.toPlainString());
     }
 
     @Test
-    void tooSmallUnscaledValue() {
-        var value = BigDecimal.valueOf(Long.MIN_VALUE).subtract(BigDecimal.ONE).movePointLeft(18);
+    void negativeUnscaledLengthOverflow() {
+        var value = BigDecimal.valueOf(Long.MIN_VALUE).multiply(BigDecimal.TEN).movePointLeft(18);
 
-        assertUnrepresentableFloat(value.toString());
+        assertNotFloat("Unrepresentable Float", value.toPlainString());
     }
 
     @Test
-    void tooLargeUnscaledValue() {
-        var value = BigDecimal.valueOf(Long.MAX_VALUE).add(BigDecimal.ONE).movePointLeft(18);
+    void positiveUnscaledAdditionOverflow() {
+        var value = BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.ONE);
 
-        assertUnrepresentableFloat(value.toString());
+        assertNotFloat("Unrepresentable Float", value.toString());
+    }
+
+    @Test
+    void positiveUnscaledMultiplicationOverflow() {
+        var value = BigDecimal.valueOf(Long.MAX_VALUE).add(BigDecimal.TEN).movePointLeft(9);
+
+        assertNotFloat("Unrepresentable Float", value.toPlainString());
+    }
+
+    @Test
+    void positiveUnscaledLengthOverflow() {
+        var value = BigDecimal.valueOf(Long.MAX_VALUE).multiply(BigDecimal.TEN).movePointLeft(18);
+
+        assertNotFloat("Unrepresentable Float", value.toPlainString());
+    }
+
+    @Test
+    void negativeScaleOverflow() {
+        var value = BigDecimal.valueOf(Long.MIN_VALUE).movePointLeft(19);
+
+        assertNotFloat("Unrepresentable Float", value.toPlainString());
+    }
+
+    @Test
+    void positiveScaleOverflow() {
+        var value = BigDecimal.valueOf(Long.MAX_VALUE).movePointLeft(19);
+
+        assertNotFloat("Unrepresentable Float", value.toPlainString());
     }
 
     @Test
     void empty() {
-        assertNotFloat("");
+        assertNotFloat("Not a Float", "");
     }
 
     @Test
     void minus() {
-        assertNotFloat("-");
+        assertNotFloat("Not a Float", "-");
     }
 
     @Test
     void point() {
-        assertNotFloat(".");
+        assertNotFloat("Not a Float", ".");
     }
 
     @Test
     void precedingPoint() {
-        assertNotFloat(".1");
+        assertNotFloat("Not a Float", ".1");
     }
 
     @Test
     void trailingPoint() {
-        assertNotFloat("1.");
+        assertNotFloat("Not a Float", "1.");
     }
 
     @Test
     void minusPoint() {
-        assertNotFloat("-.");
+        assertNotFloat("Not a Float", "-.");
     }
 
     @Test
     void minusPrecedingPoint() {
-        assertNotFloat("-.1");
+        assertNotFloat("Not a Float", "-.1");
     }
 
     @Test
     void minusTrailingPoint() {
-        assertNotFloat("-1.");
+        assertNotFloat("Not a Float", "-1.");
     }
 
     @Test
     void invalidByte() {
-        assertNotFloat("Y");
+        assertNotFloat("Not a Float", "Y");
     }
 
     private static FixFloat of(final long unscaledValue, final int scale) {
@@ -182,15 +210,7 @@ class FixFloatDecoderTest {
         return container;
     }
 
-    private static void assertNotFloat(final String value) {
-        assertDecoderError("Not a Float", value);
-    }
-
-    private static void assertUnrepresentableFloat(final String value) {
-        assertDecoderError("Unrepresentable Float", value);
-    }
-
-    private static void assertDecoderError(final String message, final String value) {
+    private static void assertNotFloat(final String message, final String value) {
         var exception = assertThrows(FixDecoderException.class, () -> decode(value));
 
         assertEquals(message, exception.getMessage());

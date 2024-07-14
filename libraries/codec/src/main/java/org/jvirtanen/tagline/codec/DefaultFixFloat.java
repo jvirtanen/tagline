@@ -138,7 +138,7 @@ public class DefaultFixFloat implements FixFloat {
      */
     @Override
     public String toString() {
-        return BigDecimal.valueOf(unscaledValue, scale).toString();
+        return BigDecimal.valueOf(unscaledValue, scale).toPlainString();
     }
 
     private static void checkScale(final int scale) {
