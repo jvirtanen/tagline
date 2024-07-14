@@ -43,6 +43,29 @@ with the `FixTimestamp` interface either.
 If the built-in data types are not suitable, you can always access the raw
 bytes of a value directly.
 
+## Limits
+
+Tagline has the following limits:
+
+  - A tag in an outgoing message must be at least 0 and can be at most 9999999.
+    Attempting to add a field with a tag that is outside these limits to an
+    outgoing message throws an `IllegalArgumentException`.
+  - A tag in an incoming message must be at least 1 and can be at most
+    `Integer.MAX_VALUE`. Iterating over a field in a received message with a
+    tag that is outside these limits throws a `FixDecoderException`.
+  - The BodyLength(9) value of an outgoing message can be at most 9999999 bytes
+    (roughly 9.5 MiB). Attempting to send a message whose BodyLength(9) exceeds
+    this limit throws an `IllegalArgumentException`.
+  - The Int data type has the minimum value of `Long.MIN_VALUE` and the maximum
+    value of `Long.MAX_VALUE`. Attempting to read a value that is outside of
+    these limits as an Int throws a `FixDecoderException`.
+  - The Float data type has the minimum unscaled value of `Long.MIN_VALUE` and
+    the maximum unscaled value of `Long.MAX_VALUE` as well as the minimum scale
+    of 0 and the maximum scale of 18. In other words, a Float can consist of at
+    most 19 digits, out of which 18 can be to the right of the decimal point.
+    Attempting read a value that is outside of these limits as a Float throws a
+    `FixDecoderException`.
+
 ## Usage
 
 See below for common Tagline use cases.
