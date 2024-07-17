@@ -28,10 +28,7 @@ instances of it and thus reduce your application's memory allocation rate. As
 Tagline can also decode Float values directly as `double` and encode them
 directly from `double`, you might not need to deal with this interface at all.
 
-FIX generally supports only the ASCII character set for Char and String values.
-However, Netty provides an efficient way to encode into the ISO-8859-1
-character set, which is a superset of ASCII and a subset of Unicode. Because of
-this, Tagline decodes and encodes Char and String values using ISO-8859-1. When
+Tagline decodes and encodes Char and String values using ISO-8859-1. When
 encountering a Unicode character that cannot be represented in ISO-8859-1,
 Tagline encodes it as `'?'` like `StandardCharsets.ISO_8859_1` does.
 
