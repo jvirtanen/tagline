@@ -174,8 +174,8 @@ calculate the checksum for the message content to compare against.
 
 Check that the CheckSum(10) value matches the message content:
 ```java
-var calculator = new FixCheckSumCalculator();
+var checkSum = new FixCheckSumCalculator();
 
-if (message.checkSum() != calculator.calculate(message))
+if (message.checkSum() != checkSum.calculate(message))
     throw new IllegalStateException("Invalid CheckSum(10) value");
 ```
