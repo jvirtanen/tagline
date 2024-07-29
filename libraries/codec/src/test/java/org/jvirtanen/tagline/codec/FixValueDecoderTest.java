@@ -48,9 +48,11 @@ class FixValueDecoderTest {
 
     @Test
     void expand() {
-        assertEquals(21, decode("aaaaaaaaaaaaaaaaaaaa\u0001"));
-        assertEquals(20, decoder.length());
-        assertEquals("aaaaaaaaaaaaaaaaaaaa", bytes());
+        var value = "a".repeat(65);
+
+        assertEquals(66, decode(String.format("%s\u0001", value)));
+        assertEquals(65, decoder.length());
+        assertEquals(value, bytes());
     }
 
     private long decode(final String value) {
