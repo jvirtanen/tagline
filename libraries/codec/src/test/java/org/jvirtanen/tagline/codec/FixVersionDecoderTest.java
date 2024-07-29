@@ -63,7 +63,9 @@ class FixVersionDecoderTest {
 
     @Test
     void expand() {
-        assertEquals(21, decode("aaaaaaaaaaaaaaaaaaaa\u0001"));
+        var value = "a".repeat(17);
+
+        assertEquals(18, decode(String.format("%s\u0001", value)));
     }
 
     @Test
