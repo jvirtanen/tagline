@@ -53,6 +53,10 @@ Tagline has the following limits:
   - The BodyLength(9) value of an outgoing message can be at most 9999999 bytes
     (roughly 9.5 MiB). Attempting to send a message whose BodyLength(9) exceeds
     this limit throws an `IllegalArgumentException`.
+  - By default, the BodyLength(9) value of an incoming message can be at most
+    `Integer.MAX_VALUE` bytes (roughly 2 GiB), but you can lower this limit.
+    Attempting to receive a message whose BodyLength(9) exceeds this limit
+    throws a `TooLongInboundFixMessageException`.
   - The Int data type has the minimum value of `Long.MIN_VALUE` and the maximum
     value of `Long.MAX_VALUE`. Attempting to read a value that is outside of
     these limits as an Int throws a `FixDecoderException`.
@@ -163,6 +167,45 @@ Check that the BeginString(8) value corresponds to FIX 4.2:
 ```java
 if (!FixVersion.FIX_4_2.equals(message.version()))
     throw new IllegalStateException("Invalid BeginString(8) value");
+```
+
+### Limit the BodyLength(9) value
+
+By default, Tagline accepts a BodyLength(9) value up to `Integer.MAX_VALUE`
+bytes (roughly 2 GiB) in incoming messages. Configure
+`InboundFixMessageDecoder` to lower this limit.
+
+Limit the BodyLength(9) value to 64 KiB:
+```java
+var config = InboundFixMessageDecoderConfig.newBuilder()
+    .setMaxBodyLength(65536)
+    .build();
+
+var pipeline = channel.pipeline();
+
+pipeline.addLast(new InboundFixMessageDecoder(config), new OutboundFixMessageEncoder());
+```
+
+Message reception is effectively lost after receiving a BodyLength(9) value
+that exceeds the limit. You should close the channel either immediately or
+right after sending a message indicating the error.
+
+Close the channel when receiving a BodyLength(9) value that exceeds the limit:
+```java
+class Handler extends SimpleChannelInboundHandler<InboundFixMessage> {
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        if (cause instanceof TooLongInboundFixMessageException) {
+            ctx.close();
+
+            return;
+        }
+
+        super.exceptionCaught(ctx, cause);
+    }
+
+}
 ```
 
 ### Check the CheckSum(10) value

@@ -15,14 +15,27 @@ import java.util.List;
  */
 public class InboundFixMessageDecoder extends ByteToMessageDecoder {
 
+    private final int maxBodyLength;
+
     private final FixVersionDecoder versionDecoder;
     private final FixBodyLengthDecoder bodyLengthDecoder;
     private final FixMessageFinder messageFinder;
 
     /**
-     * Construct a new instance.
+     * Construct a new instance using the default configuration.
      */
     public InboundFixMessageDecoder() {
+        this(InboundFixMessageDecoderConfig.DEFAULTS);
+    }
+
+    /**
+     * Construct a new instance.
+     *
+     * @param config the configuration
+     */
+    public InboundFixMessageDecoder(final InboundFixMessageDecoderConfig config) {
+        maxBodyLength = config.maxBodyLength();
+
         versionDecoder = new FixVersionDecoder();
         bodyLengthDecoder = new FixBodyLengthDecoder();
         messageFinder = new FixMessageFinder();
@@ -34,6 +47,8 @@ public class InboundFixMessageDecoder extends ByteToMessageDecoder {
      * @param ctx the context
      * @param in the input
      * @param out the output
+     * @throws TooLongInboundFixMessageException if the BodyLength(9) value in
+     *     an inbound FIX message exceeds the maximum BodyLength(9) value
      */
     @Override
     protected void decode(final ChannelHandlerContext ctx, final ByteBuf in, final List<Object> out) {
@@ -73,6 +88,8 @@ public class InboundFixMessageDecoder extends ByteToMessageDecoder {
                 return;
 
             int bodyLength = bodyLengthDecoder.bodyLength();
+            if (bodyLength > maxBodyLength)
+                tooLongInboundFixMessage(in);
 
             int trailerIndex = bodyIndex + bodyLength;
             int checkSumValueIndex = trailerIndex + 3;
@@ -114,6 +131,12 @@ public class InboundFixMessageDecoder extends ByteToMessageDecoder {
 
         in.readerIndex(endIndex);
         out.add(garbledMessage);
+    }
+
+    private static void tooLongInboundFixMessage(final ByteBuf in) {
+        in.readerIndex(in.readerIndex() + in.readableBytes());
+
+        throw new TooLongInboundFixMessageException();
     }
 
 }

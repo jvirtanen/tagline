@@ -18,11 +18,15 @@ import org.junit.jupiter.api.Test;
 
 class InboundFixMessageDecoderTest {
 
+    private static final InboundFixMessageDecoderConfig CONFIG = InboundFixMessageDecoderConfig.newBuilder()
+        .setMaxBodyLength(16)
+        .build();
+
     private EmbeddedChannel channel;
 
     @BeforeEach
     void setUp() {
-        channel = new EmbeddedChannel(new InboundFixMessageDecoder());
+        channel = new EmbeddedChannel(new InboundFixMessageDecoder(CONFIG));
     }
 
     @AfterEach
@@ -204,6 +208,25 @@ class InboundFixMessageDecoderTest {
         assertEquals(copiedBuffer("8=FIX.4.2\u00019=0\u0001"), message.content());
         assertEquals(14, message.bodyOffset());
         assertEquals(198, message.checkSum());
+    }
+
+    @Test
+    void maxLengthMessage() {
+        var messages = decode("8=FIX.4.2\u00019=16\u000149=aaaaaaaaaaaa\u000110=000\u0001");
+
+        assertEquals(1, messages.size());
+
+        var message = messages.get(0);
+
+        assertFalse(message.isGarbled());
+        assertEquals(FIX_4_2, message.version());
+        assertEquals(copiedBuffer("8=FIX.4.2\u00019=16\u000149=aaaaaaaaaaaa\u0001"), message.content());
+        assertEquals(000, message.checkSum());
+    }
+
+    @Test
+    void tooLongMessage() {
+        assertThrows(TooLongInboundFixMessageException.class, () -> decode("8=FIX.4.2\u00019=17\u000149=aaaaaaaaaaaaa\u000110=000\u0001"));
     }
 
     private List<InboundFixMessage> decode(final String bytes) {
