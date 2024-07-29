@@ -228,7 +228,4 @@ class InboundFixMessageDecoderTest {
         return Unpooled.copiedBuffer(bytes, ISO_8859_1);
     }
 
-    private static void assertGarbled(final InboundFixMessage message) {
-    }
-
 }
