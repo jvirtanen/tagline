@@ -149,7 +149,7 @@ class Handler extends SimpleChannelInboundHandler<InboundFixMessage> {
 
 A received message that does not follow the correct format regarding the
 BeginString(8), BodyLength(9), and CheckSum(10) fields is marked as garbled.
-Applications should generally ignored garbled messages. However, you can still
+Applications should generally ignore garbled messages. However, you can still
 access all the bytes of a garbled message with `InboundFixMessage#content()`.
 
 ### Check the BeginString(8) value
