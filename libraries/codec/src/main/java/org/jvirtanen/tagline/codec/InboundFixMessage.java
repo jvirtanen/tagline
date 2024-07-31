@@ -3,20 +3,19 @@
  */
 package org.jvirtanen.tagline.codec;
 
-import io.netty.buffer.ByteBuf;
-
 /**
  * <p>An inbound FIX message.</p>
+ *
+ * <p>The {@linkplain #content() content} of an inbound FIX message contains
+ * all the bytes in the received message.</p>
  *
  * <p>An inbound FIX message that does not follow the correct format regarding
  * the BeginString(8), BodyLength(9), and CheckSum(10) fields is marked as
  * garbled. Applications should generally ignore garbled messages.</p>
  *
- * <p>The {@linkplain #content() content} of a non-garbled inbound FIX message
- * contains all the bytes in the message up to and excluding the CheckSum(10)
- * field. {@link InboundFixMessageDecoder} decodes the CheckSum(10) field but
- * does not check it against the message. Use {@link FixCheckSumCalculator} to
- * do that:</p>
+ * <p>{@link InboundFixMessageDecoder} decodes the CheckSum(10) field but does
+ * not check it against the message content. Use {@link FixCheckSumCalculator}
+ * to do that:</p>
  * <pre>
  * FixCheckSumCalculator checkSum = new FixCheckSumCalculator();
  *
@@ -25,16 +24,6 @@ import io.netty.buffer.ByteBuf;
  * </pre>
  */
 public interface InboundFixMessage extends FixMessage {
-
-    /**
-     * Get the content. For a non-garbled message, the content contains all the
-     * bytes in the message up to and excluding the CheckSum(10) field. For a
-     * garbled message, the content contains all the bytes in the message.
-     *
-     * @return the content
-     */
-    @Override
-    ByteBuf content();
 
     /**
      * Get the protocol version.
@@ -57,6 +46,13 @@ public interface InboundFixMessage extends FixMessage {
      * @return the body offset or {@code -1} if this message is garbled
      */
     int bodyOffset();
+
+    /**
+     * Get the BodyLength(9) value.
+     *
+     * @return the BodyLength(9) value or {@code -1} if this message is garbled
+     */
+    int bodyLength();
 
     /**
      * Get the CheckSum(10) value.

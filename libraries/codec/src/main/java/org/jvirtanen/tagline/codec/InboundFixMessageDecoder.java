@@ -105,11 +105,11 @@ public class InboundFixMessageDecoder extends ByteToMessageDecoder {
             }
 
             var version = versionDecoder.version();
-            var content = in.retainedSlice(startIndex, trailerIndex - startIndex);
+            var content = in.retainedSlice(startIndex, endIndex - startIndex);
             int bodyOffset = bodyIndex - startIndex;
             int checkSum = FixCheckSumDecoder.decode(in, checkSumValueIndex);
 
-            var message = new DefaultInboundFixMessage(version, content, bodyOffset, checkSum);
+            var message = new DefaultInboundFixMessage(version, content, bodyOffset, bodyLength, checkSum);
 
             in.readerIndex(endIndex);
             out.add(message);
