@@ -14,13 +14,13 @@ class FixCheckSumCalculatorTest {
 
     @Test
     void calculate() {
-        var buffer = Unpooled.copiedBuffer("8=FIX.4.2\u00019=24\u000135=D\u000149=initiator\u000156=acceptor\u000134=5\u0001", ISO_8859_1);
+        var buffer = Unpooled.copiedBuffer("8=FIX.4.2\u00019=35\u000135=D\u000149=initiator\u000156=acceptor\u000134=5\u0001", ISO_8859_1);
 
-        var message = new DefaultInboundFixMessage(FIX_4_2, buffer, 14, 0);
+        var message = new DefaultInboundFixMessage(FIX_4_2, buffer, 15, 0);
 
         var calculator = new FixCheckSumCalculator();
 
-        assertEquals(56, calculator.calculate(message));
+        assertEquals(58, calculator.calculate(message));
     }
 
 }
