@@ -18,9 +18,9 @@ import io.netty.buffer.ByteBuf;
  * does not check it against the message. Use {@link FixCheckSumCalculator} to
  * do that:</p>
  * <pre>
- * FixCheckSumCalculator calculator = new FixCheckSumCalculator();
+ * FixCheckSumCalculator checkSum = new FixCheckSumCalculator();
  *
- * if (message.checkSum() != calculator.calculate(message))
+ * if (message.checkSum() != checkSum.calculate(message))
  *     throw new IllegalStateException("Invalid CheckSum(10) value");
  * </pre>
  */
@@ -39,29 +39,29 @@ public interface InboundFixMessage extends FixMessage {
     /**
      * Get the protocol version.
      *
-     * @return the protocol version or {@code null} if the message is garbled
+     * @return the protocol version or {@code null} if this message is garbled
      */
     @Override
     FixVersion version();
 
     /**
-     * Returns true if the message is garbled, otherwise returns false.
+     * Returns true if this message is garbled, otherwise returns false.
      *
-     * @return true if the message is garbled, otherwise false
+     * @return true if this message is garbled, otherwise false
      */
     boolean isGarbled();
 
     /**
      * Get the body offset.
      *
-     * @return the body offset or {@code -1} if the message is garbled
+     * @return the body offset or {@code -1} if this message is garbled
      */
     int bodyOffset();
 
     /**
      * Get the CheckSum(10) value.
      *
-     * @return the CheckSum(10) value or {@code -1} if the message is garbled
+     * @return the CheckSum(10) value or {@code -1} if this message is garbled
      */
     int checkSum();
 
