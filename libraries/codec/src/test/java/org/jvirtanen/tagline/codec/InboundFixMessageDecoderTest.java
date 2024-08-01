@@ -91,8 +91,9 @@ class InboundFixMessageDecoderTest {
 
         assertFalse(message.isGarbled());
         assertEquals(FIX_4_2, message.version());
-        assertEquals(copiedBuffer("8=FIX.4.2\u00019=0\u0001"), message.content());
+        assertEquals(copiedBuffer("8=FIX.4.2\u00019=0\u000110=198\u0001"), message.content());
         assertEquals(14, message.bodyOffset());
+        assertEquals(0, message.bodyLength());
         assertEquals(198, message.checkSum());
     }
 
@@ -106,8 +107,9 @@ class InboundFixMessageDecoderTest {
 
         assertFalse(message.isGarbled());
         assertEquals(FIX_4_2, message.version());
-        assertEquals(copiedBuffer("8=FIX.4.2\u00019=0\u0001"), message.content());
+        assertEquals(copiedBuffer("8=FIX.4.2\u00019=0\u000110=198\u0001"), message.content());
         assertEquals(14, message.bodyOffset());
+        assertEquals(0, message.bodyLength());
         assertEquals(198, message.checkSum());
     }
 
@@ -121,8 +123,9 @@ class InboundFixMessageDecoderTest {
 
         assertFalse(message.isGarbled());
         assertEquals(FIX_4_2, message.version());
-        assertEquals(copiedBuffer("8=FIX.4.2\u00019=5\u000135=D\u0001"), message.content());
+        assertEquals(copiedBuffer("8=FIX.4.2\u00019=5\u000135=D\u000110=181\u0001"), message.content());
         assertEquals(14, message.bodyOffset());
+        assertEquals(5, message.bodyLength());
         assertEquals(181, message.checkSum());
     }
 
@@ -135,8 +138,9 @@ class InboundFixMessageDecoderTest {
         for (var message : messages) {
             assertFalse(message.isGarbled());
             assertEquals(FIX_4_2, message.version());
-            assertEquals(copiedBuffer("8=FIX.4.2\u00019=0\u0001"), message.content());
+            assertEquals(copiedBuffer("8=FIX.4.2\u00019=0\u000110=198\u0001"), message.content());
             assertEquals(14, message.bodyOffset());
+            assertEquals(0, message.bodyLength());
             assertEquals(198, message.checkSum());
         }
     }
@@ -159,8 +163,9 @@ class InboundFixMessageDecoderTest {
 
         assertFalse(message.isGarbled());
         assertEquals(FIX_4_2, message.version());
-        assertEquals(copiedBuffer("8=FIX.4.2\u00019=5\u000135=D\u0001"), message.content());
+        assertEquals(copiedBuffer("8=FIX.4.2\u00019=5\u000135=D\u000110=181\u0001"), message.content());
         assertEquals(14, message.bodyOffset());
+        assertEquals(5, message.bodyLength());
         assertEquals(181, message.checkSum());
     }
 
@@ -174,8 +179,9 @@ class InboundFixMessageDecoderTest {
 
         assertFalse(firstMessage.isGarbled());
         assertEquals(FIX_4_2, firstMessage.version());
-        assertEquals(copiedBuffer("8=FIX.4.2\u00019=0\u0001"), firstMessage.content());
+        assertEquals(copiedBuffer("8=FIX.4.2\u00019=0\u000110=198\u0001"), firstMessage.content());
         assertEquals(14, firstMessage.bodyOffset());
+        assertEquals(0, firstMessage.bodyLength());
         assertEquals(198, firstMessage.checkSum());
 
         var garbledMessage = messages.get(1);
@@ -184,14 +190,16 @@ class InboundFixMessageDecoderTest {
         assertEquals(null, garbledMessage.version());
         assertEquals(copiedBuffer("garbled\u0001"), garbledMessage.content());
         assertEquals(-1, garbledMessage.bodyOffset());
+        assertEquals(-1, garbledMessage.bodyLength());
         assertEquals(-1, garbledMessage.checkSum());
 
         var secondMessage = messages.get(2);
 
         assertFalse(secondMessage.isGarbled());
         assertEquals(FIX_4_2, secondMessage.version());
-        assertEquals(copiedBuffer("8=FIX.4.2\u00019=5\u000135=D\u0001"), secondMessage.content());
+        assertEquals(copiedBuffer("8=FIX.4.2\u00019=5\u000135=D\u000110=181\u0001"), secondMessage.content());
         assertEquals(14, secondMessage.bodyOffset());
+        assertEquals(5, secondMessage.bodyLength());
         assertEquals(181, secondMessage.checkSum());
     }
 
@@ -205,14 +213,15 @@ class InboundFixMessageDecoderTest {
 
         assertFalse(message.isGarbled());
         assertEquals(FIX_4_2, message.version());
-        assertEquals(copiedBuffer("8=FIX.4.2\u00019=0\u0001"), message.content());
+        assertEquals(copiedBuffer("8=FIX.4.2\u00019=0\u000110=198\u0001"), message.content());
         assertEquals(14, message.bodyOffset());
+        assertEquals(0, message.bodyLength());
         assertEquals(198, message.checkSum());
     }
 
     @Test
     void maxLengthMessage() {
-        var messages = decode("8=FIX.4.2\u00019=16\u000149=aaaaaaaaaaaa\u000110=000\u0001");
+        var messages = decode("8=FIX.4.2\u00019=16\u000149=aaaaaaaaaaaa\u000110=052\u0001");
 
         assertEquals(1, messages.size());
 
@@ -220,13 +229,15 @@ class InboundFixMessageDecoderTest {
 
         assertFalse(message.isGarbled());
         assertEquals(FIX_4_2, message.version());
-        assertEquals(copiedBuffer("8=FIX.4.2\u00019=16\u000149=aaaaaaaaaaaa\u0001"), message.content());
-        assertEquals(000, message.checkSum());
+        assertEquals(copiedBuffer("8=FIX.4.2\u00019=16\u000149=aaaaaaaaaaaa\u000110=052\u0001"), message.content());
+        assertEquals(15, message.bodyOffset());
+        assertEquals(16, message.bodyLength());
+        assertEquals(52, message.checkSum());
     }
 
     @Test
     void tooLongMessage() {
-        assertThrows(TooLongInboundFixMessageException.class, () -> decode("8=FIX.4.2\u00019=17\u000149=aaaaaaaaaaaaa\u000110=000\u0001"));
+        assertThrows(TooLongInboundFixMessageException.class, () -> decode("8=FIX.4.2\u00019=17\u000149=aaaaaaaaaaaaa\u000110=149\u0001"));
     }
 
     private List<InboundFixMessage> decode(final String bytes) {

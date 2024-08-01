@@ -33,19 +33,33 @@ public class FixCheckSumCalculator {
      * @return the CheckSum(10) value
      */
     public int calculate(final InboundFixMessage message) {
-        return calculate(message.content());
+        return calculate(message.content(), 0, message.bodyOffset() + message.bodyLength());
     }
 
     /**
-     * Calculate the CheckSum(10) value.
+     * Calculate the CheckSum(10) value over the readable bytes in a buffer.
      *
      * @param buffer a buffer
      * @return the CheckSum(10) value
      */
     public int calculate(final ByteBuf buffer) {
+        int readerIndex = buffer.readerIndex();
+
+        return calculate(buffer, readerIndex, readerIndex + buffer.readableBytes());
+    }
+
+    /**
+     * Calculate the CheckSum(10) value over a span of bytes in a buffer.
+     *
+     * @param buffer a buffer
+     * @param index the starting index of the span
+     * @param length the length of the span
+     * @return the CheckSum(10) value
+     */
+    public int calculate(final ByteBuf buffer, final int index, final int length) {
         checkSum = 0;
 
-        buffer.forEachByte(processor);
+        buffer.forEachByte(index, length, processor);
 
         return checkSum & MASK;
     }

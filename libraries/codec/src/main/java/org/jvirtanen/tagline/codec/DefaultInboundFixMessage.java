@@ -12,6 +12,7 @@ public class DefaultInboundFixMessage extends DefaultFixMessage implements Inbou
 
     private final boolean isGarbled;
     private final int bodyOffset;
+    private final int bodyLength;
     private final int checkSum;
 
     /**
@@ -20,11 +21,12 @@ public class DefaultInboundFixMessage extends DefaultFixMessage implements Inbou
      * @param version the version
      * @param content the content
      * @param bodyOffset the body offset in the content
+     * @param bodyLength the BodyLength(9) value
      * @param checkSum the CheckSum(10) value
      */
     public DefaultInboundFixMessage(final FixVersion version, final ByteBuf content,
-            final int bodyOffset, final int checkSum) {
-        this(false, version, content, bodyOffset, checkSum);
+            final int bodyOffset, final int bodyLength, final int checkSum) {
+        this(false, version, content, bodyOffset, bodyLength, checkSum);
     }
 
     /**
@@ -33,15 +35,16 @@ public class DefaultInboundFixMessage extends DefaultFixMessage implements Inbou
      * @param content the content
      */
     public DefaultInboundFixMessage(final ByteBuf content) {
-        this(true, null, content, -1, -1);
+        this(true, null, content, -1, -1, -1);
     }
 
     private DefaultInboundFixMessage(final boolean isGarbled, final FixVersion version,
-            final ByteBuf content, final int bodyOffset, final int checkSum) {
+            final ByteBuf content, final int bodyOffset, final int bodyLength, final int checkSum) {
         super(version, content);
 
         this.isGarbled = isGarbled;
         this.bodyOffset = bodyOffset;
+        this.bodyLength = bodyLength;
         this.checkSum = checkSum;
     }
 
@@ -53,6 +56,11 @@ public class DefaultInboundFixMessage extends DefaultFixMessage implements Inbou
     @Override
     public int bodyOffset() {
         return bodyOffset;
+    }
+
+    @Override
+    public int bodyLength() {
+        return bodyLength;
     }
 
     @Override
@@ -77,7 +85,7 @@ public class DefaultInboundFixMessage extends DefaultFixMessage implements Inbou
 
     @Override
     public DefaultInboundFixMessage replace(final ByteBuf content) {
-        return new DefaultInboundFixMessage(version(), content, bodyOffset, checkSum);
+        return new DefaultInboundFixMessage(version(), content, bodyOffset, bodyLength, checkSum);
     }
 
     @Override
