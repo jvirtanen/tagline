@@ -74,9 +74,9 @@ class Initiator {
 
     private static EventLoopGroup createEventLoopGroup(final String transport, final int numThreads) {
         switch (transport) {
-        case "--epoll":
+        case "epoll":
             return new EpollEventLoopGroup(numThreads);
-        case "--kqueue":
+        case "kqueue":
             return new KQueueEventLoopGroup(numThreads);
         default:
             return new NioEventLoopGroup(numThreads);
@@ -85,9 +85,9 @@ class Initiator {
 
     private static ChannelFactory<SocketChannel> createChannelFactory(final String transport) {
         switch (transport) {
-        case "--epoll":
+        case "epoll":
             return EpollSocketChannel::new;
-        case "--kqueue":
+        case "kqueue":
             return KQueueSocketChannel::new;
         default:
             return NioSocketChannel::new;
@@ -95,7 +95,7 @@ class Initiator {
     }
 
     private static void usage() {
-        System.err.println("Usage: --epoll|--kqueue|--nio <host> <port> <message-rate> <message-count>");
+        System.err.println("Usage: epoll|kqueue|nio <host> <port> <message-rate> <message-count>");
         System.exit(2);
     }
 

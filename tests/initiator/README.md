@@ -15,7 +15,7 @@ mvn package -am -f ../.. -pl tests/initiator
 
 Run Tagline Initiator:
 ```
-java -jar tagline-initiator.jar --epoll|--kqueue|--nio <host> <port> <message-rate> <message-count>
+java -jar tagline-initiator.jar epoll|kqueue|nio <host> <port> <message-rate> <message-count>
 ```
 
 Specify the message rate as messages per second. To observe the best
