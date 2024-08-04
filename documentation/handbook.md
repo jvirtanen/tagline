@@ -151,10 +151,12 @@ class Handler extends SimpleChannelInboundHandler<InboundFixMessage> {
 
 ### Handle a garbled message
 
-A received message that does not follow the correct format regarding the
-BeginString(8), BodyLength(9), and CheckSum(10) fields is marked as garbled.
-Applications should generally ignore garbled messages. However, you can still
-access all the bytes of a garbled message with `InboundFixMessage#content()`.
+A received message that does not follow the correct format is marked as
+garbled. Applications should generally ignore garbled messages.
+
+A garbled message might or might not have the BeginString(8), BodyLength(9),
+and CheckSum(10) values. However, you can always access all the bytes of a
+garbled message with `InboundFixMessage#content()`.
 
 ### Check the BeginString(8) value
 
@@ -220,5 +222,5 @@ Check that the CheckSum(10) value matches the message content:
 var checkSum = new FixCheckSumCalculator();
 
 if (message.checkSum() != checkSum.calculate(message))
-    throw new IllegalStateException("Invalid CheckSum(10) value");
+    message.setGarbled();
 ```

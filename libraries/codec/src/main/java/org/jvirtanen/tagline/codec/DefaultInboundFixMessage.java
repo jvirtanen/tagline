@@ -10,10 +10,11 @@ import io.netty.buffer.ByteBuf;
  */
 public class DefaultInboundFixMessage extends DefaultFixMessage implements InboundFixMessage {
 
-    private final boolean isGarbled;
     private final int bodyOffset;
     private final int bodyLength;
     private final int checkSum;
+
+    private boolean isGarbled;
 
     /**
      * Construct a new non-garbled instance.
@@ -26,7 +27,7 @@ public class DefaultInboundFixMessage extends DefaultFixMessage implements Inbou
      */
     public DefaultInboundFixMessage(final FixVersion version, final ByteBuf content,
             final int bodyOffset, final int bodyLength, final int checkSum) {
-        this(false, version, content, bodyOffset, bodyLength, checkSum);
+        this(version, content, bodyOffset, bodyLength, checkSum, false);
     }
 
     /**
@@ -35,22 +36,30 @@ public class DefaultInboundFixMessage extends DefaultFixMessage implements Inbou
      * @param content the content
      */
     public DefaultInboundFixMessage(final ByteBuf content) {
-        this(true, null, content, -1, -1, -1);
+        this(null, content, -1, -1, -1, true);
     }
 
-    private DefaultInboundFixMessage(final boolean isGarbled, final FixVersion version,
-            final ByteBuf content, final int bodyOffset, final int bodyLength, final int checkSum) {
+    private DefaultInboundFixMessage(final FixVersion version, final ByteBuf content,
+            final int bodyOffset, final int bodyLength, final int checkSum, final boolean isGarbled) {
         super(version, content);
 
-        this.isGarbled = isGarbled;
         this.bodyOffset = bodyOffset;
         this.bodyLength = bodyLength;
         this.checkSum = checkSum;
+
+        this.isGarbled = isGarbled;
     }
 
     @Override
     public boolean isGarbled() {
         return isGarbled;
+    }
+
+    @Override
+    public DefaultInboundFixMessage setGarbled() {
+        this.isGarbled = true;
+
+        return this;
     }
 
     @Override
