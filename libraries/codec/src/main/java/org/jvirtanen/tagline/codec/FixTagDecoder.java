@@ -10,6 +10,8 @@ import io.netty.util.ByteProcessor;
 
 class FixTagDecoder implements ByteProcessor {
 
+    private int lowerBound;
+
     private int tag;
 
     int tag() {
@@ -17,6 +19,8 @@ class FixTagDecoder implements ByteProcessor {
     }
 
     int decode(final ByteBuf buffer, final int offset, final int length) {
+        lowerBound = '1';
+
         tag = 0;
 
         int equalsIndex = buffer.forEachByte(offset, length, this);
@@ -34,10 +38,10 @@ class FixTagDecoder implements ByteProcessor {
         if (value == EQUALS)
             return false;
 
-        int lowerBound = tag == 0 ? '1' : '0';
-
         if (value < lowerBound || value > '9')
             invalidTag();
+
+        lowerBound = '0';
 
         tag = 10 * tag + value - '0';
         if (tag < 0)
