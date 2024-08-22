@@ -99,8 +99,11 @@ public class FixFieldIterator implements Iterable<FixField>, Iterator<FixField> 
     }
 
     /**
+     * Return the next field.
      *
-     *
+     * @return the next field
+     * @throws FixDecoderException if decoding a field fails
+     * @throws NoSuchElementException if there are no more fields
      */
     @Override
     public FixField next() {
