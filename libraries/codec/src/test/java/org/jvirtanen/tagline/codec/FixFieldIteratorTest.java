@@ -5,7 +5,9 @@ package org.jvirtanen.tagline.codec;
 
 import static java.nio.charset.StandardCharsets.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.jvirtanen.tagline.codec.FixVersion.*;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
@@ -54,6 +56,21 @@ class FixFieldIteratorTest {
 
         assertEquals(49, secondField.tag());
         assertTrue("initiator".contentEquals(secondField.asString()));
+
+        assertFalse(fields.hasNext());
+        assertNoSuchElement(fields);
+    }
+
+    @Test
+    void message() {
+        var fields = iterate(FIX_4_2, "8=FIX.4.2\u00019=5\u000135=D\u000110=181\u0001", 14, 5, 181);
+
+        assertTrue(fields.hasNext());
+
+        var field = fields.next();
+
+        assertEquals(35, field.tag());
+        assertTrue("D".contentEquals(field.asString()));
 
         assertFalse(fields.hasNext());
         assertNoSuchElement(fields);
@@ -168,13 +185,22 @@ class FixFieldIteratorTest {
         assertIncompleteField(fields);
     }
 
-    private static FixFieldIterator iterate(final String value) {
-        var buffer = Unpooled.copiedBuffer(value, ISO_8859_1);
-        var iterator = new FixFieldIterator();
+    private static FixFieldIterator iterate(final String bytes) {
+        var buffer = copiedBuffer(bytes);
 
-        iterator.iterate(buffer, buffer.readerIndex(), buffer.readableBytes());
+        return new FixFieldIterator().iterate(buffer, buffer.readerIndex(), buffer.readableBytes());
+    }
 
-        return iterator;
+    private static FixFieldIterator iterate(final FixVersion version, final String bytes,
+            final int bodyOffset, final int bodyLength, final int checkSum) {
+        var content = copiedBuffer(bytes);
+        var message = new DefaultInboundFixMessage(version, content, bodyOffset, bodyLength, checkSum);
+
+        return new FixFieldIterator().iterate(message);
+    }
+
+    private static ByteBuf copiedBuffer(final String bytes) {
+        return Unpooled.copiedBuffer(bytes, ISO_8859_1);
     }
 
     private static void assertDecoderError(final String message, final Executable executable) {
