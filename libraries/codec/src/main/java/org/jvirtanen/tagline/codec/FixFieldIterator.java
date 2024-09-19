@@ -54,10 +54,7 @@ public class FixFieldIterator implements Iterable<FixField>, Iterator<FixField> 
      * @return this instance
      */
     public FixFieldIterator iterate(final InboundFixMessage message) {
-        var buffer = message.content();
-        int bodyOffset = message.bodyOffset();
-
-        return iterate(buffer, bodyOffset, buffer.readableBytes() - bodyOffset);
+        return iterate(message.content(), message.bodyOffset(), message.bodyLength());
     }
 
     /**
