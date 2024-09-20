@@ -157,7 +157,7 @@ public class FixFieldIterator implements Iterable<FixField>, Iterator<FixField> 
 
         @Override
         public char asChar() {
-            return FixCharDecoder.decode(value.bytes(), value.length());
+            return FixCharDecoder.decode(value.bytes(), 0, value.length());
         }
 
         @Override
