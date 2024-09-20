@@ -172,6 +172,85 @@ class FixFieldIteratorTest {
     }
 
     @Test
+    void charAt() {
+        var fields = iterate("55=FOO\u0001");
+
+        assertTrue(fields.hasNext());
+
+        var field = fields.next();
+
+        assertEquals('O', field.charAt(2));
+    }
+
+    @Test
+    void charAtWithTooSmallIndex() {
+        var field = iterate("55=FOO\u0001").next();
+
+        assertThrows(IndexOutOfBoundsException.class, () -> field.charAt(-1));
+    }
+
+    @Test
+    void charAtWithTooLargeIndex() {
+        var field = iterate("55=FOO\u0001").next();
+
+        assertThrows(IndexOutOfBoundsException.class, () -> field.charAt(3));
+    }
+
+    @Test
+    void subSequence() {
+        var fields = iterate("55=FOO\u0001");
+
+        assertTrue(fields.hasNext());
+
+        var field = fields.next();
+
+        assertTrue("OO".contentEquals(field.subSequence(1, 3)));
+    }
+
+    @Test
+    void emptySubSequence() {
+        var fields = iterate("55=FOO\u0001");
+
+        assertTrue(fields.hasNext());
+
+        var field = fields.next();
+
+        assertTrue("".contentEquals(field.subSequence(2, 2)));
+    }
+
+    @Test
+    void subSequenceWithTooSmallStart() {
+        var field = iterate("55=FOO\u0001").next();
+
+        assertThrows(IndexOutOfBoundsException.class, () -> field.subSequence(-1, 3));
+    }
+
+    @Test
+    void subSequenceWithTooLargeStart() {
+        var field = iterate("55=FOO\u0001").next();
+
+        assertThrows(IndexOutOfBoundsException.class, () -> field.subSequence(3, 2));
+    }
+
+    @Test
+    void subSequenceWithTooLargeEnd() {
+        var field = iterate("55=FOO\u0001").next();
+
+        assertThrows(IndexOutOfBoundsException.class, () -> field.subSequence(0, 4));
+    }
+
+    @Test
+    void string() {
+        var fields = iterate("55=FOO\u0001");
+
+        assertTrue(fields.hasNext());
+
+        var field = fields.next();
+
+        assertEquals("FOO", field.toString());
+    }
+
+    @Test
     void incompleteTag() {
         var fields = iterate("35");
 
