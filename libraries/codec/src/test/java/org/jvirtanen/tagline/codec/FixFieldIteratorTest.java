@@ -197,6 +197,49 @@ class FixFieldIteratorTest {
     }
 
     @Test
+    void subSequence() {
+        var fields = iterate("55=FOO\u0001");
+
+        assertTrue(fields.hasNext());
+
+        var field = fields.next();
+
+        assertTrue("OO".contentEquals(field.subSequence(1, 3)));
+    }
+
+    @Test
+    void emptySubSequence() {
+        var fields = iterate("55=FOO\u0001");
+
+        assertTrue(fields.hasNext());
+
+        var field = fields.next();
+
+        assertTrue("".contentEquals(field.subSequence(2, 2)));
+    }
+
+    @Test
+    void subSequenceWithTooSmallStart() {
+        var field = iterate("55=FOO\u0001").next();
+
+        assertThrows(IndexOutOfBoundsException.class, () -> field.subSequence(-1, 3));
+    }
+
+    @Test
+    void subSequenceWithTooLargeStart() {
+        var field = iterate("55=FOO\u0001").next();
+
+        assertThrows(IndexOutOfBoundsException.class, () -> field.subSequence(3, 2));
+    }
+
+    @Test
+    void subSequenceWithTooLargeEnd() {
+        var field = iterate("55=FOO\u0001").next();
+
+        assertThrows(IndexOutOfBoundsException.class, () -> field.subSequence(0, 4));
+    }
+
+    @Test
     void incompleteTag() {
         var fields = iterate("35");
 

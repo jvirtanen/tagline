@@ -211,7 +211,10 @@ public class FixFieldIterator implements Iterable<FixField>, Iterator<FixField> 
 
         @Override
         public CharSequence subSequence(final int start, final int end) {
-            return FixStringDecoder.subSequence(start, end, value.bytes(), value.length());
+            if (end > value.length())
+                indexOutOfBounds();
+
+            return FixStringDecoder.subSequence(value.bytes(), start, end);
         }
 
         @Override

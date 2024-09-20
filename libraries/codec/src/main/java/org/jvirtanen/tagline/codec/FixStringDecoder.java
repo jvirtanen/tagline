@@ -11,7 +11,7 @@ class FixStringDecoder {
         return (char)(bytes[index] & 0xff);
     }
 
-    static CharSequence subSequence(final int start, final int end, final byte[] bytes, final int length) {
+    static CharSequence subSequence(final byte[] bytes, final int start, final int end) {
         return new String(bytes, start, end - start, ISO_8859_1);
     }
 
