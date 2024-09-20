@@ -81,7 +81,7 @@ public class FixIntDecoderBench extends Bench {
     }
 
     private long decode(final byte[] bytes) {
-        return FixIntDecoder.decode(bytes, bytes.length);
+        return FixIntDecoder.decode(bytes, 0, bytes.length);
     }
 
     private static final byte[] getBytes(final long value) {

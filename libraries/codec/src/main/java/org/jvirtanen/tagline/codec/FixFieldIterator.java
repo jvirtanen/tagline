@@ -162,7 +162,7 @@ public class FixFieldIterator implements Iterable<FixField>, Iterator<FixField> 
 
         @Override
         public long asInt() {
-            return FixIntDecoder.decode(value.bytes(), value.length());
+            return FixIntDecoder.decode(value.bytes(), 0, value.length());
         }
 
         @Override
