@@ -167,12 +167,12 @@ public class FixFieldIterator implements Iterable<FixField>, Iterator<FixField> 
 
         @Override
         public void asFloat(final FixFloat container) {
-            FixFloatDecoder.decode(value.bytes(), value.length(), container);
+            FixFloatDecoder.decode(value.bytes(), 0, value.length(), container);
         }
 
         @Override
         public double asFloat() {
-            FixFloatDecoder.decode(value.bytes(), value.length(), floatContainer);
+            FixFloatDecoder.decode(value.bytes(), 0, value.length(), floatContainer);
 
             return floatContainer.doubleValue();
         }
