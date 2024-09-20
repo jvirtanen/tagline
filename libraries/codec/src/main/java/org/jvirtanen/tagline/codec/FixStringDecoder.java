@@ -7,10 +7,7 @@ import static java.nio.charset.StandardCharsets.*;
 
 class FixStringDecoder {
 
-    static char charAt(final int index, final byte[] bytes, final int length) {
-        if (index >= length)
-            indexOutOfBounds();
-
+    static char charAt(final byte[] bytes, final int index, final int length) {
         return (char)(bytes[index] & 0xff);
     }
 
@@ -20,10 +17,6 @@ class FixStringDecoder {
 
     static String toString(final byte[] bytes, final int length) {
         return new String(bytes, 0, length, ISO_8859_1);
-    }
-
-    private static void indexOutOfBounds() {
-        throw new IndexOutOfBoundsException();
     }
 
 }

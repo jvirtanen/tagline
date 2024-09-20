@@ -126,6 +126,10 @@ public class FixFieldIterator implements Iterable<FixField>, Iterator<FixField> 
         throw new FixDecoderException("Incomplete field");
     }
 
+    private static void indexOutOfBounds() {
+        throw new IndexOutOfBoundsException();
+    }
+
     private class Element implements FixField {
 
         @Override
@@ -140,7 +144,10 @@ public class FixFieldIterator implements Iterable<FixField>, Iterator<FixField> 
 
         @Override
         public char charAt(final int index) {
-            return FixStringDecoder.charAt(index, value.bytes(), value.length());
+            if (index >= value.length())
+                indexOutOfBounds();
+
+            return FixStringDecoder.charAt(value.bytes(), index, value.length());
         }
 
         @Override

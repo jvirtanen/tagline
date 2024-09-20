@@ -172,6 +172,31 @@ class FixFieldIteratorTest {
     }
 
     @Test
+    void charAt() {
+        var fields = iterate("55=FOO\u0001");
+
+        assertTrue(fields.hasNext());
+
+        var field = fields.next();
+
+        assertEquals('O', field.charAt(2));
+    }
+
+    @Test
+    void charAtWithTooSmallIndex() {
+        var field = iterate("55=FOO\u0001").next();
+
+        assertThrows(IndexOutOfBoundsException.class, () -> field.charAt(-1));
+    }
+
+    @Test
+    void charAtWithTooLargeIndex() {
+        var field = iterate("55=FOO\u0001").next();
+
+        assertThrows(IndexOutOfBoundsException.class, () -> field.charAt(3));
+    }
+
+    @Test
     void incompleteTag() {
         var fields = iterate("35");
 
