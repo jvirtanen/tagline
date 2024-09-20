@@ -7,11 +7,11 @@ import static org.jvirtanen.tagline.codec.FixConstants.*;
 
 class FixBooleanDecoder {
 
-    static boolean decode(final byte[] bytes, final int length) {
+    static boolean decode(final byte[] bytes, final int index, final int length) {
         if (length != 1)
             notBoolean();
 
-        byte value = bytes[0];
+        byte value = bytes[index];
 
         if (value == YES)
             return true;

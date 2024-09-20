@@ -152,7 +152,7 @@ public class FixFieldIterator implements Iterable<FixField>, Iterator<FixField> 
 
         @Override
         public boolean asBoolean() {
-            return FixBooleanDecoder.decode(value.bytes(), value.length());
+            return FixBooleanDecoder.decode(value.bytes(), 0, value.length());
         }
 
         @Override

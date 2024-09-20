@@ -31,9 +31,9 @@ class FixBooleanDecoderTest {
     }
 
     private static boolean decode(final String value) {
-        var bytes = value.getBytes(ISO_8859_1);
+        var bytes = String.format(">%s<", value).getBytes(ISO_8859_1);
 
-        return FixBooleanDecoder.decode(bytes, bytes.length);
+        return FixBooleanDecoder.decode(bytes, 1, bytes.length - 2);
     }
 
     private static void assertNotBoolean(final String value) {
