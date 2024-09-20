@@ -118,11 +118,11 @@ public class FixFieldIterator implements Iterable<FixField>, Iterator<FixField> 
         return element;
     }
 
-    private void noSuchElement() {
+    private static void noSuchElement() {
         throw new NoSuchElementException();
     }
 
-    private void incompleteField() {
+    private static void incompleteField() {
         throw new FixDecoderException("Incomplete field");
     }
 
