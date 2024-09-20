@@ -219,7 +219,7 @@ public class FixFieldIterator implements Iterable<FixField>, Iterator<FixField> 
 
         @Override
         public String toString() {
-            return FixStringDecoder.toString(value.bytes(), value.length());
+            return FixStringDecoder.toString(value.bytes(), 0, value.length());
         }
 
     }

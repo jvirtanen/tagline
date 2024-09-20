@@ -240,6 +240,17 @@ class FixFieldIteratorTest {
     }
 
     @Test
+    void string() {
+        var fields = iterate("55=FOO\u0001");
+
+        assertTrue(fields.hasNext());
+
+        var field = fields.next();
+
+        assertEquals("FOO", field.toString());
+    }
+
+    @Test
     void incompleteTag() {
         var fields = iterate("35");
 
