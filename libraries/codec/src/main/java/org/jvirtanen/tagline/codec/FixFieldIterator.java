@@ -189,7 +189,7 @@ public class FixFieldIterator implements Iterable<FixField>, Iterator<FixField> 
 
         @Override
         public void asTime(final FixTime container) {
-            FixTimeDecoder.decode(value.bytes(), value.length(), container);
+            FixTimeDecoder.decode(value.bytes(), 0, value.length(), container);
         }
 
         @Override

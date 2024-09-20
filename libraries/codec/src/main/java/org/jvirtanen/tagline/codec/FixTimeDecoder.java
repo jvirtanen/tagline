@@ -8,28 +8,28 @@ import static org.jvirtanen.tagline.codec.FixConstants.*;
 
 class FixTimeDecoder {
 
-    static void decode(final byte[] bytes, final int length, final FixTime container) {
+    static void decode(final byte[] bytes, final int index, final int length, final FixTime container) {
         if (length != 8 && length != 12)
             notTime();
 
         try {
-            container.setHour(decodeTwoDigits(bytes, 0));
+            container.setHour(decodeTwoDigits(bytes, index));
 
-            if (bytes[2] != ':')
+            if (bytes[index + 2] != ':')
                 notTime();
 
-            container.setMinute(decodeTwoDigits(bytes, 3));
+            container.setMinute(decodeTwoDigits(bytes, index + 3));
 
-            if (bytes[5] != ':')
+            if (bytes[index + 5] != ':')
                 notTime();
 
-            container.setSecond(decodeTwoDigits(bytes, 6));
+            container.setSecond(decodeTwoDigits(bytes, index + 6));
 
             if (length == 12) {
-                if (bytes[8] != '.')
+                if (bytes[index + 8] != '.')
                     notTime();
 
-                container.setMilli(decodeThreeDigits(bytes, 9));
+                container.setMilli(decodeThreeDigits(bytes, index + 9));
             } else {
                 container.setMilli(0);
             }
