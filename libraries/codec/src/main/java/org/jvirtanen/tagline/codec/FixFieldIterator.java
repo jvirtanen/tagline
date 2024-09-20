@@ -194,12 +194,12 @@ public class FixFieldIterator implements Iterable<FixField>, Iterator<FixField> 
 
         @Override
         public void asTimestamp(final FixTimestamp container) {
-            FixTimestampDecoder.decode(value.bytes(), value.length(), container);
+            FixTimestampDecoder.decode(value.bytes(), 0, value.length(), container);
         }
 
         @Override
         public long asTimestamp() {
-            FixTimestampDecoder.decode(value.bytes(), value.length(), timestampContainer);
+            FixTimestampDecoder.decode(value.bytes(), 0, value.length(), timestampContainer);
 
             return timestampContainer.getEpochMilli();
         }

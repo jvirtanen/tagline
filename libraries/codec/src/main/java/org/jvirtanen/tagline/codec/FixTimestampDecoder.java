@@ -8,36 +8,36 @@ import static org.jvirtanen.tagline.codec.FixConstants.*;
 
 class FixTimestampDecoder {
 
-    static void decode(final byte[] bytes, final int length, final FixTimestamp container) {
+    static void decode(final byte[] bytes, final int index, final int length, final FixTimestamp container) {
         if (length != 17 && length != 21)
             notTimestamp();
 
         try {
             container
-                .setYear(decodeFourDigits(bytes, 0))
-                .setMonth(decodeTwoDigits(bytes, 4))
-                .setDay(decodeTwoDigits(bytes, 6));
+                .setYear(decodeFourDigits(bytes, index))
+                .setMonth(decodeTwoDigits(bytes, index + 4))
+                .setDay(decodeTwoDigits(bytes, index + 6));
 
-            if (bytes[8] != '-')
+            if (bytes[index + 8] != '-')
                 notTimestamp();
 
-            container.setHour(decodeTwoDigits(bytes, 9));
+            container.setHour(decodeTwoDigits(bytes, index + 9));
 
-            if (bytes[11] != ':')
+            if (bytes[index + 11] != ':')
                 notTimestamp();
 
-            container.setMinute(decodeTwoDigits(bytes, 12));
+            container.setMinute(decodeTwoDigits(bytes, index + 12));
 
-            if (bytes[14] != ':')
+            if (bytes[index + 14] != ':')
                 notTimestamp();
 
-            container.setSecond(decodeTwoDigits(bytes, 15));
+            container.setSecond(decodeTwoDigits(bytes, index + 15));
 
             if (length == 21) {
-                if (bytes[17] != '.')
+                if (bytes[index + 17] != '.')
                     notTimestamp();
 
-                container.setMilli(decodeThreeDigits(bytes, 18));
+                container.setMilli(decodeThreeDigits(bytes, index + 18));
             } else {
                 container.setMilli(0);
             }
