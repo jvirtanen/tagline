@@ -27,8 +27,8 @@ public interface FixField extends CharSequence {
      *
      * @param index the index
      * @return the character at the index
-     * @throws IndexOutOfBoundsException if the index is smaller than 0 or
-     *     equal to or greater than the length of the value
+     * @throws IndexOutOfBoundsException if the index is less than 0 or equal
+     *     to or greater than the length of the value
      */
     char charAt(int index);
 
