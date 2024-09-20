@@ -184,7 +184,7 @@ public class FixFieldIterator implements Iterable<FixField>, Iterator<FixField> 
 
         @Override
         public void asDate(final FixDate container) {
-            FixDateDecoder.decode(value.bytes(), value.length(), container);
+            FixDateDecoder.decode(value.bytes(), 0, value.length(), container);
         }
 
         @Override

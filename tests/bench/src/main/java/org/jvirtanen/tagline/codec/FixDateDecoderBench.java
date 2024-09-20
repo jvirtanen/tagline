@@ -23,7 +23,7 @@ public class FixDateDecoderBench extends Bench {
 
     @Benchmark
     public DefaultFixTimestamp decode() {
-        FixDateDecoder.decode(bytes, 8, timestamp);
+        FixDateDecoder.decode(bytes, 0, 8, timestamp);
 
         return timestamp;
     }
