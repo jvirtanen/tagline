@@ -25,7 +25,7 @@ public class InboundFixMessageDecoder extends ByteToMessageDecoder {
      * Construct a new instance using the default configuration.
      */
     public InboundFixMessageDecoder() {
-        this(InboundFixMessageDecoderConfig.DEFAULTS);
+        this(FixDecoderConfig.DEFAULTS);
     }
 
     /**
@@ -33,7 +33,7 @@ public class InboundFixMessageDecoder extends ByteToMessageDecoder {
      *
      * @param config the configuration
      */
-    public InboundFixMessageDecoder(final InboundFixMessageDecoderConfig config) {
+    public InboundFixMessageDecoder(final FixDecoderConfig config) {
         maxBodyLength = config.maxBodyLength();
 
         versionDecoder = new FixVersionDecoder();
