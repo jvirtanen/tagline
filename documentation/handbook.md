@@ -179,7 +179,7 @@ bytes (roughly 2 GiB) in incoming messages. Configure
 
 Limit the BodyLength(9) value to 64 KiB:
 ```java
-var config = InboundFixMessageDecoderConfig.newBuilder()
+var config = FixDecoderConfig.newBuilder()
     .setMaxBodyLength(65536)
     .build();
 
