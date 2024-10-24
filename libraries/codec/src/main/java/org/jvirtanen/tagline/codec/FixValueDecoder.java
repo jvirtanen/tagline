@@ -11,6 +11,17 @@ import java.util.Arrays;
 
 class FixValueDecoder implements ByteProcessor {
 
+    static int decode(final byte[] bytes, int offset, final int length) {
+        while (offset < length) {
+            if (bytes[offset] == SOH)
+                return offset + 1;
+
+            offset++;
+        }
+
+        return -1;
+    }
+
     private static final int INITIAL_CAPACITY = 64;
 
     private int capacity;

@@ -6,7 +6,6 @@ package org.jvirtanen.tagline.codec;
 import static java.nio.charset.StandardCharsets.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import io.netty.buffer.Unpooled;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -65,9 +64,9 @@ class FixTagDecoderTest {
     }
 
     private int decode(final String value) {
-        var buffer = Unpooled.copiedBuffer(value, ISO_8859_1);
+        var bytes = value.getBytes(ISO_8859_1);
 
-        return decoder.decode(buffer, buffer.readerIndex(), buffer.readableBytes());
+        return decoder.decode(bytes, 0, bytes.length);
     }
 
     private void assertInvalidTag(final String value) {
