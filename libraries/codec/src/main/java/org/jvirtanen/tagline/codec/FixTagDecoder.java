@@ -5,12 +5,7 @@ package org.jvirtanen.tagline.codec;
 
 import static org.jvirtanen.tagline.codec.FixConstants.*;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.util.ByteProcessor;
-
-class FixTagDecoder implements ByteProcessor {
-
-    private int lowerBound;
+class FixTagDecoder {
 
     private int tag;
 
@@ -42,38 +37,6 @@ class FixTagDecoder implements ByteProcessor {
             return -1;
 
         return index;
-    }
-
-    int decode(final ByteBuf buffer, final int offset, final int length) {
-        lowerBound = '1';
-
-        tag = 0;
-
-        int equalsIndex = buffer.forEachByte(offset, length, this);
-        if (equalsIndex < 0)
-            return equalsIndex;
-
-        if (tag == 0)
-            invalidTag();
-
-        return equalsIndex + 1;
-    }
-
-    @Override
-    public boolean process(final byte value) {
-        if (value == EQUALS)
-            return false;
-
-        if (value < lowerBound || value > '9')
-            invalidTag();
-
-        lowerBound = '0';
-
-        tag = 10 * tag + value - '0';
-        if (tag < 0)
-            invalidTag();
-
-        return true;
     }
 
     private static void invalidTag() {
