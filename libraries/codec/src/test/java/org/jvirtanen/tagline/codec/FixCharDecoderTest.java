@@ -26,9 +26,9 @@ class FixCharDecoderTest {
     }
 
     private static char decode(final String value) {
-        var bytes = value.getBytes(ISO_8859_1);
+        var bytes = String.format(">%s<", value).getBytes(ISO_8859_1);
 
-        return FixCharDecoder.decode(bytes, bytes.length);
+        return FixCharDecoder.decode(bytes, 1, bytes.length - 2);
     }
 
     private static void assertNotChar(final String value) {

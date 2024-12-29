@@ -13,34 +13,34 @@ class FixFloatDecoder {
     private static final int MAX_NEGATIVE_LENGTH = 21;
     private static final int MAX_POSITIVE_LENGTH = 20;
 
-    static void decode(final byte[] bytes, final int length, final FixFloat container) {
+    static void decode(final byte[] bytes, final int index, final int length, final FixFloat container) {
         if (length == 0)
             notFloat();
 
-        if (bytes[0] == '-') {
+        if (bytes[index] == '-') {
             if (length >= MIN_NEGATIVE_EXACT_LENGTH)
-                decodeNegativeExact(bytes, length, container);
+                decodeNegativeExact(bytes, index, length, container);
             else
-                decodeNegative(bytes, length, container);
+                decodeNegative(bytes, index, length, container);
         } else {
             if (length >= MIN_POSITIVE_EXACT_LENGTH)
-                decodePositiveExact(bytes, length, container);
+                decodePositiveExact(bytes, index, length, container);
             else
-                decodePositive(bytes, length, container);
+                decodePositive(bytes, index, length, container);
         }
     }
 
-    private static void decodePositive(final byte[] bytes, final int length, final FixFloat container) {
-        byte b = bytes[0];
+    private static void decodePositive(final byte[] bytes, int index, final int length, final FixFloat container) {
+        int endIndex = index + length;
+
+        byte b = bytes[index++];
         if (b < '0' || b > '9')
             notFloat();
 
         long unscaledValue = b - '0';
 
-        int i = 1;
-
-        while (i < length) {
-            b = bytes[i++];
+        while (index < endIndex) {
+            b = bytes[index++];
             if (b == '.')
                 break;
 
@@ -50,13 +50,13 @@ class FixFloatDecoder {
             unscaledValue = 10 * unscaledValue + b - '0';
         }
 
-        if (b == '.' && i == length)
+        if (b == '.' && index == endIndex)
             notFloat();
 
         int scale = 0;
 
-        while (i < length) {
-            b = bytes[i++];
+        while (index < endIndex) {
+            b = bytes[index++];
             if (b < '0' || b > '9')
                 notFloat();
 
@@ -67,20 +67,20 @@ class FixFloatDecoder {
         container.setValue(unscaledValue, scale);
     }
 
-    private static void decodePositiveExact(final byte[] bytes, final int length, final FixFloat container) {
+    private static void decodePositiveExact(final byte[] bytes, int index, final int length, final FixFloat container) {
         if (length > MAX_POSITIVE_LENGTH)
             unrepresentableFloat();
 
-        byte b = bytes[0];
+        int endIndex = index + length;
+
+        byte b = bytes[index++];
         if (b < '0' || b > '9')
             notFloat();
 
         long unscaledValue = b - '0';
 
-        int i = 1;
-
-        while (i < length) {
-            b = bytes[i++];
+        while (index < endIndex) {
+            b = bytes[index++];
             if (b == '.')
                 break;
 
@@ -94,13 +94,13 @@ class FixFloatDecoder {
             }
         }
 
-        if (b == '.' && i == length)
+        if (b == '.' && index == endIndex)
             notFloat();
 
         int scale = 0;
 
-        while (i < length) {
-            b = bytes[i++];
+        while (index < endIndex) {
+            b = bytes[index++];
             if (b < '0' || b > '9')
                 notFloat();
 
@@ -116,20 +116,20 @@ class FixFloatDecoder {
         container.setValue(unscaledValue, scale);
     }
 
-    private static void decodeNegative(final byte[] bytes, final int length, final FixFloat container) {
+    private static void decodeNegative(final byte[] bytes, int index, final int length, final FixFloat container) {
         if (length < 2)
             notFloat();
 
-        byte b = bytes[1];
+        int endIndex = index++ + length;
+
+        byte b = bytes[index++];
         if (b < '0' || b > '9')
             notFloat();
 
         long unscaledValue = '0' - b;
 
-        int i = 2;
-
-        while (i < length) {
-            b = bytes[i++];
+        while (index < endIndex) {
+            b = bytes[index++];
             if (b == '.')
                 break;
 
@@ -139,13 +139,13 @@ class FixFloatDecoder {
             unscaledValue = 10 * unscaledValue + '0' - b;
         }
 
-        if (b == '.' && i == length)
+        if (b == '.' && index == endIndex)
             notFloat();
 
         int scale = 0;
 
-        while (i < length) {
-            b = bytes[i++];
+        while (index < endIndex) {
+            b = bytes[index++];
             if (b < '0' || b > '9')
                 notFloat();
 
@@ -156,20 +156,20 @@ class FixFloatDecoder {
         container.setValue(unscaledValue, scale);
     }
 
-    private static void decodeNegativeExact(final byte[] bytes, final int length, final FixFloat container) {
+    private static void decodeNegativeExact(final byte[] bytes, int index, final int length, final FixFloat container) {
         if (length > MAX_NEGATIVE_LENGTH)
             unrepresentableFloat();
 
-        byte b = bytes[1];
+        int endIndex = index++ + length;
+
+        byte b = bytes[index++];
         if (b < '0' || b > '9')
             notFloat();
 
         long unscaledValue = '0' - b;
 
-        int i = 2;
-
-        while (i < length) {
-            b = bytes[i++];
+        while (index < endIndex) {
+            b = bytes[index++];
             if (b == '.')
                 break;
 
@@ -183,13 +183,13 @@ class FixFloatDecoder {
             }
         }
 
-        if (b == '.' && i == length)
+        if (b == '.' && index == endIndex)
             notFloat();
 
         int scale = 0;
 
-        while (i < length) {
-            b = bytes[i++];
+        while (index < endIndex) {
+            b = bytes[index++];
             if (b < '0' || b > '9')
                 notFloat();
 

@@ -202,10 +202,10 @@ class FixFloatDecoderTest {
     }
 
     private static FixFloat decode(final String value) {
-        var bytes = value.getBytes(ISO_8859_1);
+        var bytes = String.format(">%s<", value).getBytes(ISO_8859_1);
         var container = new DefaultFixFloat();
 
-        FixFloatDecoder.decode(bytes, bytes.length, container);
+        FixFloatDecoder.decode(bytes, 1, bytes.length - 2, container);
 
         return container;
     }

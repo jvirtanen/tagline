@@ -23,7 +23,7 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 import org.HdrHistogram.Histogram;
 import org.jvirtanen.tagline.codec.DefaultOutboundFixMessage;
-import org.jvirtanen.tagline.codec.FixFieldIterator;
+import org.jvirtanen.tagline.codec.FixFieldList;
 import org.jvirtanen.tagline.codec.InboundFixMessage;
 import org.jvirtanen.tagline.codec.InboundFixMessageDecoder;
 import org.jvirtanen.tagline.codec.OutboundFixMessage;
@@ -122,7 +122,7 @@ class Tester {
 
     private class Handler extends SimpleChannelInboundHandler<InboundFixMessage> {
 
-        final FixFieldIterator fields = new FixFieldIterator();
+        final FixFieldList fields = new FixFieldList();
 
         @Override
         public void channelRead0(final ChannelHandlerContext ctx, final InboundFixMessage msg) {
@@ -131,14 +131,19 @@ class Tester {
 
             long receiveNanoTime = System.nanoTime();
 
-            for (var field : fields.iterate(msg)) {
-                if (field.tag() == MSG_TYPE && field.asChar() != EXECUTION_REPORT)
+            fields.decode(msg);
+
+            for (int i = 0; i < fields.size(); i++) {
+                int tag = fields.tagAt(i);
+                var value = fields.valueAt(i);
+
+                if (tag == MSG_TYPE && value.asChar() != EXECUTION_REPORT)
                     return;
 
-                if (field.tag() != CL_ORD_ID)
+                if (tag != CL_ORD_ID)
                     continue;
 
-                long sendNanoTime = field.asInt();
+                long sendNanoTime = value.asInt();
 
                 histogram.recordValue(receiveNanoTime - sendNanoTime);
 

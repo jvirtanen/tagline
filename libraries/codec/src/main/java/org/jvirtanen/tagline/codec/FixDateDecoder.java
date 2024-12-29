@@ -7,15 +7,15 @@ import static org.jvirtanen.tagline.codec.ByteArrayDecoder.*;
 
 class FixDateDecoder {
 
-    static void decode(final byte[] bytes, final int length, final FixDate container) {
+    static void decode(final byte[] bytes, final int index, final int length, final FixDate container) {
         if (length != 8)
             notDate();
 
         try {
             container
-                .setYear(decodeFourDigits(bytes, 0))
-                .setMonth(decodeTwoDigits(bytes, 4))
-                .setDay(decodeTwoDigits(bytes, 6));
+                .setYear(decodeFourDigits(bytes, index))
+                .setMonth(decodeTwoDigits(bytes, index + 4))
+                .setDay(decodeTwoDigits(bytes, index + 6));
         } catch (IllegalArgumentException e) {
             notDate();
         }

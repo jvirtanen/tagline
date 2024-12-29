@@ -64,9 +64,9 @@ class FixTimeDecoderTest {
     }
 
     private static void decode(final String value, final FixTime container) {
-        var bytes = value.getBytes(ISO_8859_1);
+        var bytes = String.format(">%s<", value).getBytes(ISO_8859_1);
 
-        FixTimeDecoder.decode(bytes, bytes.length, container);
+        FixTimeDecoder.decode(bytes, 1, bytes.length - 2, container);
     }
 
     private static void assertNotTime(final String value) {

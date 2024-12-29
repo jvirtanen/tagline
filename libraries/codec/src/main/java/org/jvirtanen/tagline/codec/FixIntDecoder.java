@@ -10,28 +10,30 @@ class FixIntDecoder {
     private static final int MAX_NEGATIVE_LENGTH = 20;
     private static final int MAX_POSITIVE_LENGTH = 19;
 
-    static long decode(final byte[] bytes, final int length) {
+    static long decode(final byte[] bytes, final int index, final int length) {
         if (length == 0)
             notInt();
 
-        if (bytes[0] == '-') {
+        if (bytes[index] == '-') {
             if (length >= MAX_NEGATIVE_LENGTH)
-                return decodeNegativeExact(bytes, length);
+                return decodeNegativeExact(bytes, index, length);
             else
-                return decodeNegative(bytes, length);
+                return decodeNegative(bytes, index, length);
         } else {
             if (length >= MAX_POSITIVE_LENGTH)
-                return decodePositiveExact(bytes, length);
+                return decodePositiveExact(bytes, index, length);
             else
-                return decodePositive(bytes, length);
+                return decodePositive(bytes, index, length);
         }
     }
 
-    private static long decodePositive(final byte[] bytes, final int length) {
+    private static long decodePositive(final byte[] bytes, int index, final int length) {
+        int endIndex = index + length;
+
         long value = 0;
 
-        for (int i = 0; i < length; i++) {
-            byte b = bytes[i];
+        while (index < endIndex) {
+            byte b = bytes[index++];
             if (b < '0' || b > '9')
                 notInt();
 
@@ -41,14 +43,16 @@ class FixIntDecoder {
         return value;
     }
 
-    private static long decodePositiveExact(final byte[] bytes, final int length) {
+    private static long decodePositiveExact(final byte[] bytes, int index, final int length) {
         if (length > MAX_POSITIVE_LENGTH)
             tooLargeInt();
 
+        int endIndex = index + length;
+
         long value = 0;
 
-        for (int i = 0; i < length; i++) {
-            byte b = bytes[i];
+        while (index < endIndex) {
+            byte b = bytes[index++];
             if (b < '0' || b > '9')
                 notInt();
 
@@ -62,14 +66,16 @@ class FixIntDecoder {
         return value;
     }
 
-    private static long decodeNegative(final byte[] bytes, final int length) {
+    private static long decodeNegative(final byte[] bytes, int index, final int length) {
         if (length < 2)
             notInt();
 
+        int endIndex = index++ + length;
+
         long value = 0;
 
-        for (int i = 1; i < length; i++) {
-            byte b = bytes[i];
+        while (index < endIndex) {
+            byte b = bytes[index++];
             if (b < '0' || b > '9')
                 notInt();
 
@@ -79,14 +85,16 @@ class FixIntDecoder {
         return value;
     }
 
-    private static long decodeNegativeExact(final byte[] bytes, final int length) {
+    private static long decodeNegativeExact(final byte[] bytes, int index, final int length) {
         if (length > MAX_NEGATIVE_LENGTH)
             tooSmallInt();
 
+        int endIndex = index++ + length;
+
         long value = 0;
 
-        for (int i = 1; i < length; i++) {
-            byte b = bytes[i];
+        while (index < endIndex) {
+            byte b = bytes[index++];
             if (b < '0' || b > '9')
                 notInt();
 

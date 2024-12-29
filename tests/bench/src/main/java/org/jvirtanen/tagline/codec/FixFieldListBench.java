@@ -12,15 +12,15 @@ import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Setup;
 
-public class FixFieldIteratorBench extends Bench {
+public class FixFieldListBench extends Bench {
 
     private ByteBuf content;
 
-    private FixFieldIterator fields;
+    private FixFieldList fields;
 
     @Setup(Level.Iteration)
     public void setUp() {
-        fields = new FixFieldIterator();
+        fields = new FixFieldList();
 
         content = buffer("35=D\u000149=initiator\u000156=acceptor\u0001"
                 + "34=1\u000152=20240107-16:44:30.950\u000111=123\u0001"
@@ -29,18 +29,8 @@ public class FixFieldIteratorBench extends Bench {
     }
 
     @Benchmark
-    public int iterate() {
-        fields.iterate(content, content.readerIndex(), content.readableBytes());
-
-        int count = 0;
-
-        while (fields.hasNext()) {
-            fields.next();
-
-            count++;
-        }
-
-        return count;
+    public int decode() {
+        return fields.decode(content, content.readerIndex(), content.readableBytes()).size();
     }
 
     private static ByteBuf buffer(final String value) {

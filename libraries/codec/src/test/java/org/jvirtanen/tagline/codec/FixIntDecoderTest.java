@@ -119,9 +119,9 @@ class FixIntDecoderTest {
     }
 
     private static long decode(final String value) {
-        var bytes = value.getBytes(ISO_8859_1);
+        var bytes = String.format(">%s<", value).getBytes(ISO_8859_1);
 
-        return FixIntDecoder.decode(bytes, bytes.length);
+        return FixIntDecoder.decode(bytes, 1, bytes.length - 2);
     }
 
     private static void assertNotInt(final String message, final String value) {

@@ -120,13 +120,12 @@ attempted to parse the BeginString(8), BodyLength(9), and CheckSum(10) fields.
 Handling the other fields is up to you, as is checking the BeginString(8) and
 CheckSum(10) values.
 
-The `FixFieldIterator` class provides sequential access to the fields in a
-received message. It implements the standard `Iterator` interface but is
-reusable: invoke `FixFieldIterator#iterate()` for each received message. Also
-note that each invocation of `FixFieldIterator#next()` invalidates the
-previously returned value.
+To help you work with received messages, Tagline contains a `FixFieldList`
+class. It provides efficient read-only random access to all fields in a
+received message and is designed for reuse: construct an instance of it once,
+and then invoke `FixFieldList#decode()` on each received message.
 
-The `FixField` interface represents a field in a received message. It extends
+The `FixValue` interface represents a value in a received message. It extends
 the standard `CharSequence` interface for treating the value as a String, and
 it also contains methods to decode the value as any of the other standard data
 types.
@@ -135,15 +134,17 @@ Print out the fields in a received message:
 ```java
 class Handler extends SimpleChannelInboundHandler<InboundFixMessage> {
 
-    private final FixFieldIterator fields = new FixFieldIterator();
+    private final FixFieldList fields = new FixFieldList();
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, InboundFixMessage msg) {
         if (msg.isGarbled())
             return;
 
-        for (var field : fields.iterate(msg))
-            System.out.printf("%s=%s\n", field.tag(), field.asString());
+        fields.decode(msg);
+
+        for (int i = 0; i < fields.size(); i++)
+            System.out.printf("%s=%s\n", fields.tagAt(i), fields.valueAt(i));
     }
 
 }

@@ -75,9 +75,9 @@ class FixTimestampDecoderTest {
     }
 
     private void decode(final String value) {
-        var bytes = value.getBytes(ISO_8859_1);
+        var bytes = String.format(">%s<", value).getBytes(ISO_8859_1);
 
-        FixTimestampDecoder.decode(bytes, bytes.length, timestamp);
+        FixTimestampDecoder.decode(bytes, 1, bytes.length - 2, timestamp);
     }
 
     private void notTimestamp(final String value) {
