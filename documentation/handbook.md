@@ -73,17 +73,19 @@ See below for common Tagline use cases.
 
 ### Configure a channel
 
-Tagline represents an incoming message as `InboundFixMessage` and an outgoing
-message as `OutboundFixMessage`. Add an `InboundFixMessageDecoder` to a channel
-to decode incoming messages and an `OutboundFixMessageEncoder` to encode
-outgoing messages. Note that both handlers are stateful so each channel needs
-their own instances.
+Tagline represents an outgoing message as `OutboundFixMessage` and an incoming
+message first as `InboundFixMessage` and then as `FixFieldList`. Add an
+`OutboundFixMessageEncoder` to a channel to encode outgoing messages and an
+`InboundFixMessageDecoder` and a `FixFieldListDecoder` to decode incoming
+messages. Note that all handlers are stateful so each channel needs their own
+instances.
 
 Configure a channel:
 ```java
 var pipeline = channel.pipeline();
 
-pipeline.addLast(new InboundFixMessageDecoder(), new OutboundFixMessageEncoder());
+pipeline.addLast(new OutboundFixMessageEncoder(), new InboundFixMessageDecoder(),
+    new FixFieldListDecoder());
 ```
 
 ### Send a message
@@ -115,15 +117,9 @@ channel.writeAndFlush(new DefaultOutboundFixMessage(FixVersion.FIX_4_2, channel.
 
 ### Handle a received message
 
-When you get a hold of an `InboundFixMessage` instance, Tagline has only
-attempted to parse the BeginString(8), BodyLength(9), and CheckSum(10) fields.
-Handling the other fields is up to you, as is checking the BeginString(8) and
-CheckSum(10) values.
-
-To help you work with received messages, Tagline contains a `FixFieldList`
-class. It provides efficient read-only random access to all fields in a
-received message and is designed for reuse: construct an instance of it once,
-and then invoke `FixFieldList#decode()` on each received message.
+`FixFieldList` provides efficient read-only random access to all fields in a
+received message. It parses tags eagerly when decoding an incoming message and
+values only lazily on demand.
 
 The `FixValue` interface represents a value in a received message. It extends
 the standard `CharSequence` interface for treating the value as a String, and
@@ -132,44 +128,46 @@ types.
 
 Print out the fields in a received message:
 ```java
-class Handler extends SimpleChannelInboundHandler<InboundFixMessage> {
-
-    private final FixFieldList fields = new FixFieldList();
+class Handler extends SimpleChannelInboundHandler<FixFieldList> {
 
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, InboundFixMessage msg) {
-        if (msg.isGarbled())
-            return;
-
-        fields.decode(msg);
-
-        for (int i = 0; i < fields.size(); i++)
-            System.out.printf("%s=%s\n", fields.tagAt(i), fields.valueAt(i));
+    public void channelRead0(ChannelHandlerContext ctx, FixFieldList msg) {
+        for (int i = 0; i < msg.size(); i++)
+            System.out.printf("%s=%s\n", msg.tagAt(i), msg.valueAt(i));
     }
 
 }
 ```
+
+Note that the `FixFieldList` instances produced by `FixFieldListDecoder` use
+reference counting. A `SimpleChannelInboundHandler`, as above, automatically
+decrements the reference count. If you don't want that behavior, you can manage
+the reference count manually using `ReferenceCountUtil#retain()` and
+`ReferenceCountUtil#release()`.
 
 ### Handle a garbled message
 
 A received message that does not follow the correct format is marked as
 garbled. Applications should generally ignore garbled messages.
 
-A garbled message might or might not have the BeginString(8), BodyLength(9),
-and CheckSum(10) values. However, you can always access all the bytes of a
-garbled message with `InboundFixMessage#content()`.
+`FixFieldListDecoder` throws a `GarbledFixMessageException` on a garbled
+message.
 
 ### Check the BeginString(8) value
 
-Although Tagline parses the BeginString(8) field in received messages, it's
-up to you to check that it matches what you expect. Tagline represents the
-BeginString(8) value as `FixVersion`, and you can access it for a received
-message as `InboundFixMessage#version()`.
+By default, Tagline does not check the BeginString(8) value in a received
+message. Configure `FixFieldListDecoder` to enable this check.
 
 Check that the BeginString(8) value corresponds to FIX 4.2:
 ```java
-if (!FixVersion.FIX_4_2.equals(message.version()))
-    throw new IllegalStateException("Invalid BeginString(8) value");
+var config = FixFieldListDecoderConfig.newBuilder()
+    .setVersion(FixVersion.FIX_4_2)
+    .build();
+
+var pipeline = channel.pipeline();
+
+pipeline.addLast(new OutboundFixMessageEncoder(), new InboundFixMessageDecoder(),
+    new FixFieldListDecoder(config));
 ```
 
 ### Limit the BodyLength(9) value
@@ -186,7 +184,8 @@ var config = InboundFixMessageDecoderConfig.newBuilder()
 
 var pipeline = channel.pipeline();
 
-pipeline.addLast(new InboundFixMessageDecoder(config), new OutboundFixMessageEncoder());
+pipeline.addLast(new OutboundFixMessageEncoder(), new InboundFixMessageDecoder(config),
+    new FixFieldListDecoder());
 ```
 
 Message reception is effectively lost after receiving a BodyLength(9) value
@@ -195,7 +194,7 @@ right after sending a message indicating the error.
 
 Close the channel when receiving a BodyLength(9) value that exceeds the limit:
 ```java
-class Handler extends SimpleChannelInboundHandler<InboundFixMessage> {
+class Handler extends SimpleChannelInboundHandler<FixFieldList> {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
@@ -213,15 +212,18 @@ class Handler extends SimpleChannelInboundHandler<InboundFixMessage> {
 
 ### Check the CheckSum(10) value
 
-Tagline parses the CheckSum(10) field in a received message but does not
-automatically check that it matches the message content. To do so, access the
-value as `InboundFixMessage#checkSum()` and use `FixCheckSumCalculator` to
-calculate the checksum for the message content to compare against.
+By default, Tagline does not check that the CheckSum(10) value in a received
+message matches the message content. Configure `FixFieldListDecoder` to enable
+this check.
 
-Check that the CheckSum(10) value matches the message content:
+Enable the CheckSum(10) check:
 ```java
-var checkSum = new FixCheckSumCalculator();
+var config = FixFieldListDecoderConfig.newBuilder()
+    .setCheckSumEnabled(true)
+    .build();
 
-if (message.checkSum() != checkSum.calculate(message))
-    message.setGarbled();
+var pipeline = channel.pipeline();
+
+pipeline.addLast(new OutboundFixMessageEncoder(), new InboundFixMessageDecoder(),
+    new FixFieldListDecoder(config));
 ```
