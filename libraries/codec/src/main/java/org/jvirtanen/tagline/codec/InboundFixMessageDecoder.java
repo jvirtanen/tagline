@@ -47,8 +47,8 @@ public class InboundFixMessageDecoder extends ByteToMessageDecoder {
      * @param ctx the context
      * @param in the input
      * @param out the output
-     * @throws TooLongInboundFixMessageException if the BodyLength(9) value in
-     *     an inbound FIX message exceeds the maximum BodyLength(9) value
+     * @throws TooLongFixMessageException if the BodyLength(9) value in an
+     *     inbound FIX message exceeds the maximum BodyLength(9) value
      */
     @Override
     protected void decode(final ChannelHandlerContext ctx, final ByteBuf in, final List<Object> out) {
@@ -89,7 +89,7 @@ public class InboundFixMessageDecoder extends ByteToMessageDecoder {
 
             int bodyLength = bodyLengthDecoder.bodyLength();
             if (bodyLength > maxBodyLength)
-                tooLongInboundFixMessage(in);
+                tooLongFixMessage(in);
 
             int trailerIndex = bodyIndex + bodyLength;
             int checkSumValueIndex = trailerIndex + 3;
@@ -133,10 +133,10 @@ public class InboundFixMessageDecoder extends ByteToMessageDecoder {
         out.add(garbledMessage);
     }
 
-    private static void tooLongInboundFixMessage(final ByteBuf in) {
+    private static void tooLongFixMessage(final ByteBuf in) {
         in.readerIndex(in.readerIndex() + in.readableBytes());
 
-        throw new TooLongInboundFixMessageException();
+        throw new TooLongFixMessageException();
     }
 
 }

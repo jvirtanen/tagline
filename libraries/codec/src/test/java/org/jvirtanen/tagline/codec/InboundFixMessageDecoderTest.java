@@ -237,7 +237,7 @@ class InboundFixMessageDecoderTest {
 
     @Test
     void tooLongMessage() {
-        assertThrows(TooLongInboundFixMessageException.class, () -> decode("8=FIX.4.2\u00019=17\u000149=aaaaaaaaaaaaa\u000110=149\u0001"));
+        assertThrows(TooLongFixMessageException.class, () -> decode("8=FIX.4.2\u00019=17\u000149=aaaaaaaaaaaaa\u000110=149\u0001"));
     }
 
     private List<InboundFixMessage> decode(final String bytes) {
