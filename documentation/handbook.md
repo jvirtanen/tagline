@@ -56,7 +56,7 @@ Tagline has the following limits:
   - By default, the BodyLength(9) value of an incoming message can be at most
     `Integer.MAX_VALUE` bytes (roughly 2 GiB), but you can lower this limit.
     Attempting to receive a message whose BodyLength(9) exceeds this limit
-    throws a `TooLongInboundFixMessageException`.
+    throws a `TooLongFixMessageException`.
   - The Int data type has the minimum value of `Long.MIN_VALUE` and the maximum
     value of `Long.MAX_VALUE`. Attempting to read a value that is outside of
     these limits as an Int throws a `FixDecoderException`.
@@ -199,7 +199,7 @@ class Handler extends SimpleChannelInboundHandler<InboundFixMessage> {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        if (cause instanceof TooLongInboundFixMessageException) {
+        if (cause instanceof TooLongFixMessageException) {
             ctx.close();
 
             return;

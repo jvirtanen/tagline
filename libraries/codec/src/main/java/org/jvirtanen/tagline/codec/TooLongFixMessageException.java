@@ -6,14 +6,14 @@ package org.jvirtanen.tagline.codec;
 import io.netty.handler.codec.TooLongFrameException;
 
 /**
- * Indicates a too long inbound FIX message.
+ * Indicates a too long FIX message.
  */
-public class TooLongInboundFixMessageException extends TooLongFrameException {
+public class TooLongFixMessageException extends TooLongFrameException {
 
     /**
      * Construct a new instance.
      */
-    public TooLongInboundFixMessageException() {
+    public TooLongFixMessageException() {
     }
 
 }
