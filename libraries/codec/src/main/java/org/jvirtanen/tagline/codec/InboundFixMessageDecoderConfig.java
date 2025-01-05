@@ -4,9 +4,9 @@
 package org.jvirtanen.tagline.codec;
 
 /**
- * The FIX decoder configuration.
+ * The inbound FIX message decoder configuration.
  */
-public class FixDecoderConfig {
+public class InboundFixMessageDecoderConfig {
 
     /**
      * The default maximum BodyLength(9) value: {@link Integer#MAX_VALUE} bytes (roughly 2 GiB).
@@ -16,7 +16,7 @@ public class FixDecoderConfig {
     /**
      * The defaults.
      */
-    public static final FixDecoderConfig DEFAULTS = newBuilder().build();
+    public static final InboundFixMessageDecoderConfig DEFAULTS = newBuilder().build();
 
     private final int maxBodyLength;
 
@@ -25,7 +25,7 @@ public class FixDecoderConfig {
      *
      * @param maxBodyLength the maximum BodyLength(9) value
      */
-    public FixDecoderConfig(final int maxBodyLength) {
+    public InboundFixMessageDecoderConfig(final int maxBodyLength) {
         this.maxBodyLength = maxBodyLength;
     }
 
@@ -48,7 +48,7 @@ public class FixDecoderConfig {
     }
 
     /**
-     * A FIX decoder configuration builder.
+     * An inbound FIX message decoder configuration builder.
      */
     public static class Builder {
 
@@ -75,8 +75,8 @@ public class FixDecoderConfig {
          *
          * @return a configuration
          */
-        public FixDecoderConfig build() {
-            return new FixDecoderConfig(maxBodyLength);
+        public InboundFixMessageDecoderConfig build() {
+            return new InboundFixMessageDecoderConfig(maxBodyLength);
         }
 
     }

@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 
 class InboundFixMessageDecoderTest {
 
-    private static final FixDecoderConfig CONFIG = FixDecoderConfig.newBuilder()
+    private static final InboundFixMessageDecoderConfig CONFIG = InboundFixMessageDecoderConfig.newBuilder()
         .setMaxBodyLength(16)
         .build();
 
