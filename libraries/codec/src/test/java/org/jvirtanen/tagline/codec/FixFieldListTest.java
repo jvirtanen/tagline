@@ -86,10 +86,12 @@ class FixFieldListTest {
     @Test
     void clear() {
         var fields = decode("35=D\u000149=initiator\u0001");
+        var value = fields.valueAt(0);
 
         fields.clear();
 
         assertEquals(0, fields.size());
+        assertEquals(0, value.length());
     }
 
     @Test

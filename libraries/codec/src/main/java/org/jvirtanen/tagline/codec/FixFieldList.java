@@ -157,10 +157,13 @@ public class FixFieldList {
     }
 
     /**
-     * Set the number of fields to zero.
+     * Clear this instance.
      */
     public void clear() {
         size = 0;
+
+        for (var value : values)
+            value.clear();
     }
 
     /**
@@ -297,6 +300,11 @@ public class FixFieldList {
 
         int offset;
         int length;
+
+        void clear() {
+            offset = 0;
+            length = 0;
+        }
 
         @Override
         public int length() {
