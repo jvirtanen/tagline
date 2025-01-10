@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 import org.HdrHistogram.Histogram;
 import org.jvirtanen.tagline.codec.DefaultOutboundFixMessage;
 import org.jvirtanen.tagline.codec.FixFieldList;
-import org.jvirtanen.tagline.codec.InboundFixMessage;
+import org.jvirtanen.tagline.codec.FixFieldListDecoder;
 import org.jvirtanen.tagline.codec.InboundFixMessageDecoder;
 import org.jvirtanen.tagline.codec.OutboundFixMessage;
 import org.jvirtanen.tagline.codec.OutboundFixMessageEncoder;
@@ -80,8 +80,9 @@ class Tester {
                     var pipeline = channel.pipeline();
 
                     pipeline.addLast(
-                            new InboundFixMessageDecoder(),
                             new OutboundFixMessageEncoder(),
+                            new InboundFixMessageDecoder(),
+                            new FixFieldListDecoder(),
                             new Handler()
                         );
                 }
@@ -120,22 +121,15 @@ class Tester {
         return promise;
     }
 
-    private class Handler extends SimpleChannelInboundHandler<InboundFixMessage> {
-
-        final FixFieldList fields = new FixFieldList();
+    private class Handler extends SimpleChannelInboundHandler<FixFieldList> {
 
         @Override
-        public void channelRead0(final ChannelHandlerContext ctx, final InboundFixMessage msg) {
-            if (msg.isGarbled())
-                return;
-
+        public void channelRead0(final ChannelHandlerContext ctx, final FixFieldList msg) {
             long receiveNanoTime = System.nanoTime();
 
-            fields.decode(msg);
-
-            for (int i = 0; i < fields.size(); i++) {
-                int tag = fields.tagAt(i);
-                var value = fields.valueAt(i);
+            for (int i = 0; i < msg.size(); i++) {
+                int tag = msg.tagAt(i);
+                var value = msg.valueAt(i);
 
                 if (tag == MSG_TYPE && value.asChar() != EXECUTION_REPORT)
                     return;
