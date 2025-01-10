@@ -312,6 +312,14 @@ public class FixFieldList {
         }
 
         @Override
+        public byte byteAt(final int index) {
+            if (index < 0 || index >= length)
+                indexOutOfBounds();
+
+            return bytes[offset + index];
+        }
+
+        @Override
         public char charAt(final int index) {
             if (index < 0 || index >= length)
                 indexOutOfBounds();

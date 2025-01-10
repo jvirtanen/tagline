@@ -16,6 +16,16 @@ public interface FixValue extends CharSequence {
     int length();
 
     /**
+     * Get the byte at the specified index.
+     *
+     * @param index the index
+     * @return the byte at the index
+     * @throws IndexOutOfBoundsException if the index is smaller than 0 or
+     *     equal to or greater than the length
+     */
+    byte byteAt(int index);
+
+    /**
      * Get the character at the specified index.
      *
      * @param index the index

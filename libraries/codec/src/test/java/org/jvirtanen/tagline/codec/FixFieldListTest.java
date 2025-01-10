@@ -224,6 +224,13 @@ class FixFieldListTest {
     }
 
     @Test
+    void valueByteAt() {
+        var value = decode("55=FOO\u0001").valueAt(0);
+
+        assertEquals('O', value.byteAt(2));
+    }
+
+    @Test
     void valueCharAt() {
         var value = decode("55=FOO\u0001").valueAt(0);
 
