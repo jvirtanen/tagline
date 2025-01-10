@@ -18,7 +18,8 @@ Add Tagline to a channel:
 ```java
 var pipeline = channel.pipeline();
 
-pipeline.addLast(new InboundFixMessageDecoder(), new OutboundFixMessageEncoder());
+pipeline.addLast(new OutboundFixMessageEncoder(), new InboundFixMessageDecoder(),
+    new FixFieldListDecoder());
 ```
 
 Send a FIX message:
