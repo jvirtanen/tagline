@@ -40,6 +40,25 @@ with the `FixTimestamp` interface either.
 If the built-in data types are not suitable, you can always access the raw
 bytes of a value directly.
 
+## Messages
+
+Tagline uses three representations of a message.
+
+An `OutboundFixMessage` represents an outgoing message. It wraps a `ByteBuf`
+and implements a set of methods to append fields of the standard data types
+into the message. When you append a field, `OutboundFixMessage` immediately
+encodes it into the wrapped `ByteBuf`.
+
+An `InboundFixMessage` represents an incoming message, and it, too, wraps a
+`ByteBuf`. It handles the BeginString(8), BodyLength(9), and CheckSum(10)
+fields and contains the incoming message in the wrapped `ByteBuf`.
+
+`FixFieldList` is a data structure offering efficient read-only random access
+to a sequence of fields. Mirroring `OutboundFixMessage`, it implements a set
+of methods to access fields as the standard data types. To achieve this,
+`FixFieldList` decodes the values of accessed fields lazily on demand. Tagline
+uses `FixFieldList` to represent a received message.
+
 ## Limits
 
 Tagline has the following limits:
@@ -116,10 +135,6 @@ channel.writeAndFlush(new DefaultOutboundFixMessage(FixVersion.FIX_4_2, channel.
 ```
 
 ### Handle a received message
-
-`FixFieldList` provides efficient read-only random access to all fields in a
-received message. It parses tags eagerly when decoding an incoming message and
-values only lazily on demand.
 
 The `FixValue` interface represents a value in a received message. It extends
 the standard `CharSequence` interface for treating the value as a String, and
