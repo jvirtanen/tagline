@@ -69,6 +69,8 @@ public interface FixMessage extends ByteBufHolder {
 
     /**
      * Increase the reference count by 1.
+     *
+     * @return this instance
      */
     @Override
     FixMessage retain();
@@ -77,18 +79,24 @@ public interface FixMessage extends ByteBufHolder {
      * Increase the reference count by the specified increment.
      *
      * @param increment the increment
+     * @return this instance
      */
     @Override
     FixMessage retain(int increment);
 
     /**
      * Record the current access location for debugging purposes.
+     *
+     * @return this instance
      */
     @Override
     FixMessage touch();
 
     /**
      * Decrease the reference count by 1.
+     *
+     * @return true if the reference count became 0 and this instance was
+     *     deallocated, otherwise false
      */
     @Override
     boolean release();
@@ -97,6 +105,8 @@ public interface FixMessage extends ByteBufHolder {
      * Decrease the reference count by the specified decrement.
      *
      * @param decrement the decrement
+     * @return true if this reference count became 0 and this instance was
+     *     deallocated, otherwise false
      */
     @Override
     boolean release(int decrement);
@@ -105,6 +115,7 @@ public interface FixMessage extends ByteBufHolder {
      * Record the current access location for debugging purposes.
      *
      * @param hint the hint
+     * @return this instance
      */
     @Override
     FixMessage touch(Object hint);
