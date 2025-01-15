@@ -34,12 +34,14 @@ class ReferenceCountedFixFieldList extends FixFieldList implements ReferenceCoun
             clear();
 
             handle.recycle(ReferenceCountedFixFieldList.this);
+
+            setRefCnt(1);
         }
 
     };
 
     static ReferenceCountedFixFieldList newInstance() {
-        return POOL.get().retain();
+        return POOL.get();
     }
 
     ReferenceCountedFixFieldList(final Handle<ReferenceCountedFixFieldList> handle) {
