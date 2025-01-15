@@ -10,8 +10,8 @@ import java.util.List;
  * <p>A FIX field list decoder.</p>
  *
  * <p>The {@link FixFieldList} instances produced by this decoder use reference
- * counting. Use {@link ReferenceCountUtil#retain(Object)} and
- * {@link ReferenceCountUtil#release(Object)} to manage the reference count
+ * counting and resource pooling. Use {@link ReferenceCountUtil#retain(Object)}
+ * and {@link ReferenceCountUtil#release(Object)} to manage the reference count
  * manually, or use, for example, {@link SimpleChannelInboundHandler} that
  * automatically decrements the reference count.</p>
  */
@@ -55,7 +55,7 @@ public class FixFieldListDecoder extends MessageToMessageDecoder<InboundFixMessa
     }
 
     private void decode(final InboundFixMessage msg, final List<Object> out) {
-        var fields = ReferenceCountedFixFieldList.newInstance();
+        var fields = PooledFixFieldList.newInstance();
 
         try {
             fields.decode(msg);
