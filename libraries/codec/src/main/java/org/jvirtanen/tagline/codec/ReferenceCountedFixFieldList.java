@@ -9,7 +9,7 @@ import io.netty.util.AbstractReferenceCounted;
 import io.netty.util.ReferenceCounted;
 import io.netty.util.internal.ObjectPool;
 
-class ReferenceCountedFixFieldList extends FixFieldList implements ReferenceCounted {
+class ReferenceCountedFixFieldList extends UnpooledFixFieldList implements ReferenceCounted {
 
     private static final ObjectPool<ReferenceCountedFixFieldList> POOL = ObjectPool.newPool(
         new ObjectCreator<>() {
