@@ -105,7 +105,7 @@ public interface FixMessage extends ByteBufHolder {
      * Decrease the reference count by the specified decrement.
      *
      * @param decrement the decrement
-     * @return true if this reference count became 0 and this instance was
+     * @return true if the reference count became 0 and this instance was
      *     deallocated, otherwise false
      */
     @Override
