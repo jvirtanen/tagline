@@ -19,6 +19,7 @@ public class FixFieldListDecoder extends MessageToMessageDecoder<InboundFixMessa
 
     private final FixVersion version;
     private final FixCheckSumCalculator checkSum;
+    private final FixFieldListPool pool;
 
     /**
      * Construct a new instance using the default configuration.
@@ -35,6 +36,7 @@ public class FixFieldListDecoder extends MessageToMessageDecoder<InboundFixMessa
     public FixFieldListDecoder(final FixFieldListDecoderConfig config) {
         version = config.version();
         checkSum = config.isCheckSumEnabled() ? new FixCheckSumCalculator() : null;
+        pool = new FixFieldListPool(config.messageConfig());
     }
 
     /**
@@ -55,7 +57,7 @@ public class FixFieldListDecoder extends MessageToMessageDecoder<InboundFixMessa
     }
 
     private void decode(final InboundFixMessage msg, final List<Object> out) {
-        var fields = PooledFixFieldList.newInstance();
+        var fields = pool.get();
 
         try {
             fields.decode(msg);

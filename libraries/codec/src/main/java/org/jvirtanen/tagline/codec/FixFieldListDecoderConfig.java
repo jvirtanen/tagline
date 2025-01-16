@@ -19,12 +19,18 @@ public class FixFieldListDecoderConfig {
     public static final boolean DEFAULT_CHECK_SUM_ENABLED = false;
 
     /**
+     * The default message configuration: {@link FixFieldListConfig#DEFAULTS}.
+     */
+    public static final FixFieldListConfig DEFAULT_MESSAGE_CONFIG = FixFieldListConfig.DEFAULTS;
+
+    /**
      * The defaults.
      */
     public static final FixFieldListDecoderConfig DEFAULTS = newBuilder().build();
 
     private final FixVersion version;
     private final boolean isCheckSumEnabled;
+    private final FixFieldListConfig messageConfig;
 
     /**
      * Construct a new instance.
@@ -33,10 +39,13 @@ public class FixFieldListDecoderConfig {
      *     BeginString(8) check
      * @param isCheckSumEnabled true if the CheckSum(10) check enabled,
      *     otherwise false
+     * @param messageConfig the message configuration
      */
-    public FixFieldListDecoderConfig(final FixVersion version, final boolean isCheckSumEnabled) {
+    public FixFieldListDecoderConfig(final FixVersion version, final boolean isCheckSumEnabled,
+            final FixFieldListConfig messageConfig) {
         this.version = version;
         this.isCheckSumEnabled = isCheckSumEnabled;
+        this.messageConfig = messageConfig;
     }
 
     /**
@@ -59,6 +68,15 @@ public class FixFieldListDecoderConfig {
     }
 
     /**
+     * Get the message configuration.
+     *
+     * @return the message configuration
+     */
+    public FixFieldListConfig messageConfig() {
+        return messageConfig;
+    }
+
+    /**
      * Construct a new builder.
      *
      * @return a new builder
@@ -74,10 +92,12 @@ public class FixFieldListDecoderConfig {
 
         private FixVersion version;
         private boolean isCheckSumEnabled;
+        private FixFieldListConfig messageConfig;
 
         private Builder() {
             version = DEFAULT_VERSION;
             isCheckSumEnabled = DEFAULT_CHECK_SUM_ENABLED;
+            messageConfig = DEFAULT_MESSAGE_CONFIG;
         }
 
         /**
@@ -107,12 +127,24 @@ public class FixFieldListDecoderConfig {
         }
 
         /**
+         * Set the message configuration.
+         *
+         * @param messageConfig the message configuration
+         * @return this instance
+         */
+        public Builder setPoolConfig(final FixFieldListConfig messageConfig) {
+            this.messageConfig = messageConfig;
+
+            return this;
+        }
+
+        /**
          * Build a configuration.
          *
          * @return a configuration
          */
         public FixFieldListDecoderConfig build() {
-            return new FixFieldListDecoderConfig(version, isCheckSumEnabled);
+            return new FixFieldListDecoderConfig(version, isCheckSumEnabled, messageConfig);
         }
 
     }

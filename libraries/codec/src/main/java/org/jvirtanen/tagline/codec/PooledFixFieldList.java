@@ -7,22 +7,11 @@ import static io.netty.util.internal.ObjectPool.*;
 
 import io.netty.util.AbstractReferenceCounted;
 import io.netty.util.ReferenceCounted;
-import io.netty.util.internal.ObjectPool;
 
 /**
  * A pooled FIX field list.
  */
 public class PooledFixFieldList extends UnpooledFixFieldList implements ReferenceCounted {
-
-    private static final ObjectPool<PooledFixFieldList> POOL = ObjectPool.newPool(
-        new ObjectCreator<>() {
-
-            @Override
-            public PooledFixFieldList newObject(final Handle<PooledFixFieldList> handle) {
-                return new PooledFixFieldList(handle);
-            }
-
-    });
 
     private final Handle<PooledFixFieldList> handle;
     private final ReferenceCounted refCnt = new AbstractReferenceCounted() {
@@ -43,16 +32,9 @@ public class PooledFixFieldList extends UnpooledFixFieldList implements Referenc
 
     };
 
-    /**
-     * Get an instance.
-     *
-     * @return an instance
-     */
-    public static PooledFixFieldList newInstance() {
-        return POOL.get();
-    }
+    PooledFixFieldList(final Handle<PooledFixFieldList> handle, final FixFieldListConfig config) {
+        super(config);
 
-    private PooledFixFieldList(final Handle<PooledFixFieldList> handle) {
         this.handle = handle;
     }
 
