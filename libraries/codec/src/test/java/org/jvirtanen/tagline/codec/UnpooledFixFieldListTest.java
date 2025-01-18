@@ -11,7 +11,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.junit.jupiter.api.Test;
 
-class FixFieldListTest {
+class UnpooledFixFieldListTest {
 
     @Test
     void empty() {
@@ -401,16 +401,24 @@ class FixFieldListTest {
         return decode(bytes, FixFieldListConfig.DEFAULTS);
     }
 
-    private static FixFieldList decode(final String bytes, final FixFieldListConfig config) {
-        return new FixFieldList(config).decode(copiedBuffer(bytes));
+    private static UnpooledFixFieldList decode(final String bytes, final FixFieldListConfig config) {
+        var fields = new UnpooledFixFieldList(config);
+
+        fields.decode(copiedBuffer(bytes));
+
+        return fields;
     }
 
-    private static FixFieldList decode(final FixVersion version, final String bytes,
+    private static UnpooledFixFieldList decode(final FixVersion version, final String bytes,
             final int bodyOffset, final int bodyLength, final int checkSum) {
         var content = copiedBuffer(bytes);
         var message = new DefaultInboundFixMessage(version, content, bodyOffset, bodyLength, checkSum);
 
-        return new FixFieldList().decode(message);
+        var fields = new UnpooledFixFieldList();
+
+        fields.decode(message);
+
+        return fields;
     }
 
     private static ByteBuf copiedBuffer(final String bytes) {
