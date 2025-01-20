@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2024 Jussi Virtanen
  */
 package org.jvirtanen.tagline.initiator;
