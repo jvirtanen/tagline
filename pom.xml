@@ -197,7 +197,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <doclint>all,-missing</doclint>
-          <excludePackageNames>org.jvirtanen.tagline.initiator:*.jmh_generated</excludePackageNames>
+          <excludePackageNames>org.jvirtanen.tagline.acceptor:org.jvirtanen.tagline.initiator:*.jmh_generated</excludePackageNames>
           <links>
             <link>https://netty.io/4.1/api/</link>
           </links>
@@ -209,6 +209,7 @@
 
   <modules>
     <module>libraries/codec</module>
+    <module>tests/acceptor</module>
     <module>tests/bench</module>
     <module>tests/initiator</module>
   </modules>
