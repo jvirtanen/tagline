@@ -186,6 +186,10 @@ pipeline.addLast(new OutboundFixMessageEncoder(), new InboundFixMessageDecoder()
     new FixFieldListDecoder(config));
 ```
 
+If the BeginString(8) check is enabled and the BeginString(8) value in a
+message does not match the configuration, `FixFieldListDecoder` considers the
+message garbled and throws a `GarbledFixMessageException`.
+
 ### Limit the BodyLength(9) value
 
 By default, Tagline accepts a BodyLength(9) value up to `Integer.MAX_VALUE`
@@ -204,9 +208,10 @@ pipeline.addLast(new OutboundFixMessageEncoder(), new InboundFixMessageDecoder(c
     new FixFieldListDecoder());
 ```
 
-Message reception is effectively lost after receiving a BodyLength(9) value
-that exceeds the limit. You should close the channel either immediately or
-right after sending a message indicating the error.
+If a received BodyLength(9) value exceeds the limit, `InboundFixMessageDecoder`
+throws a `TooLongFixMessageException`. Message reception is effectively lost at
+this point, and you should close the channel either immediately or right after
+sending a message indicating the error.
 
 Close the channel when receiving a BodyLength(9) value that exceeds the limit:
 ```java
@@ -243,3 +248,7 @@ var pipeline = channel.pipeline();
 pipeline.addLast(new OutboundFixMessageEncoder(), new InboundFixMessageDecoder(),
     new FixFieldListDecoder(config));
 ```
+
+If the CheckSum(10) check is enabled and the CheckSum(10) value in a message
+does not match the message content, `FixFieldListDecoder` considers the message
+garbled and throws a `GarbledFixMessageException`.
