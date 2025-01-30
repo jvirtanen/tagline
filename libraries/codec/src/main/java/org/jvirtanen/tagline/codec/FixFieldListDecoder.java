@@ -1,3 +1,6 @@
+/*
+ * Copyright 2024 Jussi Virtanen
+ */
 package org.jvirtanen.tagline.codec;
 
 import io.netty.channel.ChannelHandlerContext;
