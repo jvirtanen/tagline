@@ -37,7 +37,7 @@ public class FixFieldListDecoderConfig {
      *
      * @param version the FIX protocol version or {@code null} to disable the
      *     BeginString(8) check
-     * @param isCheckSumEnabled true if the CheckSum(10) check enabled,
+     * @param isCheckSumEnabled true if the CheckSum(10) check is enabled,
      *     otherwise false
      * @param messageConfig the message configuration
      */
