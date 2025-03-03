@@ -252,3 +252,18 @@ pipeline.addLast(new OutboundFixMessageEncoder(), new InboundFixMessageDecoder()
 If the CheckSum(10) check is enabled and the CheckSum(10) value in a message
 does not match the message content, `FixFieldListDecoder` considers the message
 garbled and throws a `GarbledFixMessageException`.
+
+## Frequently Asked Questions
+
+See below for answers to some of the questions you might have.
+
+### Does Tagline support my favorite FIX protocol version?
+
+Most likely. As a FIX codec, Tagline should be able to decode and encode any
+FIX protocol version.
+
+### Does Tagline support FAST or SBE?
+
+No. Tagline focuses solely on the tag-value encoding, also known as the classic
+FIX, and does not support FIX Adapted for Streaming (FAST) or Simple Binary
+Encoding (SBE).
