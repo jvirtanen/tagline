@@ -262,6 +262,22 @@ See below for answers to some of the questions you might have.
 Most likely. As a FIX codec, Tagline should be able to decode and encode any
 FIX protocol version.
 
+### Does Tagline support custom FIX tags?
+
+Yes. Tagline only cares about BeginString(8), BodyLength(9), and CheckSum(10)
+and passes all other FIX tags straight through.
+
+### Does Tagline support custom FIX values?
+
+Yes. You can either decode and encode them as any of Tagline's data types or,
+if necessary,  implement your own decoding and encoding methods for them.
+
+### Does Tagline support SSL/TLS?
+
+Yes. Well, Tagline itself doesn't support Secure Sockets Layer (SSL) or
+Transport Layer Security (TLS), but it works nicely with Netty's built-in
+SSL/TLS support.
+
 ### Does Tagline support FAST or SBE?
 
 No. Tagline focuses solely on the tag-value encoding, also known as the classic
