@@ -8,18 +8,17 @@ Netty.
 
 Tagline implements the following standard data types:
 
-  - **Boolean** corresponds to the primitive type `boolean`.
-  - **Char** corresponds to the primitive type `char`.
-  - **Int** corresponds to the primitive type `long`.
-  - **Float** is implemented in terms of the custom interface `FixFloat` and
-    the primitive type `double`.
-  - **String** is implemented in terms of the standard interface
-    `CharSequence`.
-  - **UTCDate** and **LocalMktDate** are implemented in terms of the custom
+  - Boolean corresponds to the primitive type `boolean`.
+  - Char corresponds to the primitive type `char`.
+  - Int corresponds to the primitive type `long`.
+  - Float is implemented in terms of the custom interface `FixFloat` and the
+    primitive type `double`.
+  - String is implemented in terms of the standard interface `CharSequence`.
+  - UTCDate and LocalMktDate are implemented in terms of the custom
     interface `FixDate`.
-  - **UTCTimeOnly** is implemented in terms of the custom interface `FixTime`.
-  - **UTCTimestamp** is implemented in terms of the custom interface
-    `FixTimestamp` and the primitive type `long`.
+  - UTCTimeOnly is implemented in terms of the custom interface `FixTime`.
+  - UTCTimestamp is implemented in terms of the custom interface `FixTimestamp`
+    and the primitive type `long`.
 
 The custom `FixFloat` interface represents a decimal value in terms of an
 unscaled `long` value and an `int` scale, the latter specifying the number of
