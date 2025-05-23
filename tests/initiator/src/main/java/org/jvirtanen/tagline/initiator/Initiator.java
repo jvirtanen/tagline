@@ -4,12 +4,13 @@
 package org.jvirtanen.tagline.initiator;
 
 import io.netty.channel.ChannelFactory;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.epoll.EpollEventLoopGroup;
+import io.netty.channel.IoHandlerFactory;
+import io.netty.channel.MultiThreadIoEventLoopGroup;
+import io.netty.channel.epoll.EpollIoHandler;
 import io.netty.channel.epoll.EpollSocketChannel;
-import io.netty.channel.kqueue.KQueueEventLoopGroup;
+import io.netty.channel.kqueue.KQueueIoHandler;
 import io.netty.channel.kqueue.KQueueSocketChannel;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import java.net.InetSocketAddress;
@@ -41,7 +42,8 @@ class Initiator {
     }
 
     private static void main(final String transport, final InetSocketAddress address, final int messageRate, final int messageCount) {
-        var eventLoopGroup = createEventLoopGroup(transport, 1);
+        var ioHandlerFactory = createIoHandlerFactory(transport);
+        var eventLoopGroup = new MultiThreadIoEventLoopGroup(1, ioHandlerFactory);
         var channelFactory = createChannelFactory(transport);
         var histogram = new Histogram(3);
 
@@ -72,14 +74,14 @@ class Initiator {
         printf("\n");
     }
 
-    private static EventLoopGroup createEventLoopGroup(final String transport, final int numThreads) {
+    private static IoHandlerFactory createIoHandlerFactory(final String transport) {
         switch (transport) {
         case "epoll":
-            return new EpollEventLoopGroup(numThreads);
+            return EpollIoHandler.newFactory();
         case "kqueue":
-            return new KQueueEventLoopGroup(numThreads);
+            return KQueueIoHandler.newFactory();
         default:
-            return new NioEventLoopGroup(numThreads);
+            return NioIoHandler.newFactory();
         }
     }
 

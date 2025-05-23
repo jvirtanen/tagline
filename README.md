@@ -10,7 +10,7 @@ It handles the BeginString(8), BodyLength(9), and CheckSum(10) fields and
 implements the standard FIX data types. Tagline is for you if you're building
 a low-latency FIX application or a higher-level FIX protocol implementation.
 
-Tagline requires Java 11 or newer and Netty 4.1.x.
+Tagline requires Java 11 or newer and Netty 4.2.x.
 
 ## Usage
 

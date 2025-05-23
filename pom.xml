@@ -15,7 +15,7 @@
   <properties>
     <java.version>11</java.version>
     <jmh.version>1.37</jmh.version>
-    <netty.version>4.1.119.Final</netty.version>
+    <netty.version>4.2.1.Final</netty.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -152,6 +152,7 @@
                   <exclude>META-INF/maven/io.netty/netty-transport-native-epoll/pom.xml</exclude>
                   <exclude>META-INF/maven/io.netty/netty-transport-native-kqueue/pom.properties</exclude>
                   <exclude>META-INF/maven/io.netty/netty-transport-native-kqueue/pom.xml</exclude>
+                  <exclude>META-INF/versions/11/module-info.class</exclude>
                 </excludes>
               </filter>
             </filters>
