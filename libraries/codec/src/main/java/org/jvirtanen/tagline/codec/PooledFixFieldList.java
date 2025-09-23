@@ -3,7 +3,7 @@
  */
 package org.jvirtanen.tagline.codec;
 
-import static io.netty.util.internal.ObjectPool.*;
+import static io.netty.util.Recycler.*;
 
 import io.netty.util.AbstractReferenceCounted;
 import io.netty.util.ReferenceCounted;
