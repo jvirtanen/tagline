@@ -9,9 +9,9 @@ import io.netty.buffer.ByteBuf;
 import java.util.Arrays;
 
 /**
- * An unpooled FIX field list.
+ * The default implementation of a FIX field list.
  */
-public class UnpooledFixFieldList implements FixFieldList {
+public class DefaultFixFieldList implements FixFieldList {
 
     private final FixTagDecoder tagDecoder;
 
@@ -28,7 +28,7 @@ public class UnpooledFixFieldList implements FixFieldList {
     /**
      * Construct a new instance using the default configuration.
      */
-    public UnpooledFixFieldList() {
+    public DefaultFixFieldList() {
         this(FixFieldListConfig.DEFAULTS);
     }
 
@@ -37,7 +37,7 @@ public class UnpooledFixFieldList implements FixFieldList {
      *
      * @param config the configuration
      */
-    public UnpooledFixFieldList(final FixFieldListConfig config) {
+    public DefaultFixFieldList(final FixFieldListConfig config) {
         tagDecoder = new FixTagDecoder();
 
         floatContainer = new DefaultFixFloat();
