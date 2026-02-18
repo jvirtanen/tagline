@@ -11,7 +11,7 @@ import io.netty.util.ReferenceCounted;
 /**
  * A pooled FIX field list.
  */
-public class PooledFixFieldList extends UnpooledFixFieldList implements ReferenceCounted {
+public class PooledFixFieldList extends DefaultFixFieldList implements ReferenceCounted {
 
     private final Handle<PooledFixFieldList> handle;
     private final ReferenceCounted refCnt = new AbstractReferenceCounted() {

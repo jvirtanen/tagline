@@ -12,7 +12,7 @@ import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Setup;
 
-public class UnpooledFixFieldListBench extends Bench {
+public class DefaultFixFieldListBench extends Bench {
 
     private ByteBuf content;
 
@@ -20,7 +20,7 @@ public class UnpooledFixFieldListBench extends Bench {
 
     @Setup(Level.Iteration)
     public void setUp() {
-        fields = new UnpooledFixFieldList();
+        fields = new DefaultFixFieldList();
 
         content = buffer("35=D\u000149=initiator\u000156=acceptor\u0001"
                 + "34=1\u000152=20240107-16:44:30.950\u000111=123\u0001"
