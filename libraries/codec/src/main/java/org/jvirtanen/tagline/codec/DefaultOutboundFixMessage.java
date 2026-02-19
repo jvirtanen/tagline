@@ -156,9 +156,9 @@ public class DefaultOutboundFixMessage extends DefaultFixMessage implements Outb
     }
 
     @Override
-    public DefaultOutboundFixMessage addBytes(final int tag, final byte[] bytes) {
+    public DefaultOutboundFixMessage addBytes(final int tag, final byte[] value) {
         FixMediumEncoder.encode(tag, EQUALS, content);
-        content.writeBytes(bytes);
+        content.writeBytes(value);
         content.writeByte(SOH);
 
         return this;
