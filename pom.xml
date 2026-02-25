@@ -200,7 +200,7 @@
           <doclint>all,-missing</doclint>
           <excludePackageNames>org.jvirtanen.tagline.acceptor:org.jvirtanen.tagline.initiator:*.jmh_generated</excludePackageNames>
           <links>
-            <link>https://netty.io/4.1/api/</link>
+            <link>https://netty.io/4.2/api/</link>
           </links>
           <sourceFileExcludes>**\/*Bench.java</sourceFileExcludes>
         </configuration>
