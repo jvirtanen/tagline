@@ -58,7 +58,7 @@ of methods to access fields as the standard data types. To achieve this,
 `FixFieldList` decodes the values of accessed fields lazily on demand. Tagline
 uses `FixFieldList` to represent a received message.
 
-## Limits
+## Limitations
 
 Tagline has the following limits:
 
@@ -84,6 +84,9 @@ Tagline has the following limits:
     most 19 digits, out of which 18 can be to the right of the decimal point.
     Attempting read a value that is outside of these limits as a Float throws a
     `FixDecoderException`.
+
+In addition, `FixFieldList` does not currently have the capability to decode
+length-limited fields, such as RawData(96) or XmlData(213).
 
 ## Usage
 
@@ -259,7 +262,7 @@ See below for answers to some of the questions you might have.
 ### Does Tagline support my favorite FIX protocol version?
 
 Most likely. As a FIX codec, Tagline should be able to decode and encode any
-FIX protocol version.
+FIX protocol version, but please note the limitations mentioned earlier.
 
 ### Does Tagline support custom FIX tags?
 
