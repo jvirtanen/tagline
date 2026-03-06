@@ -6,29 +6,13 @@ package org.jvirtanen.tagline.codec;
 import static org.jvirtanen.tagline.codec.FixConstants.*;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.util.ByteProcessor;
-import java.util.Arrays;
 
-class FixVersionDecoder implements ByteProcessor {
-
-    private static final int INITIAL_CAPACITY = 16;
+class FixVersionDecoder {
 
     private FixVersion version;
 
-    private int capacity;
-
-    private byte[] bytes;
-
-    private int count;
-
     FixVersionDecoder() {
         version = null;
-
-        capacity = INITIAL_CAPACITY;
-
-        bytes = new byte[capacity];
-
-        count = 0;
     }
 
     FixVersion version() {
@@ -36,35 +20,23 @@ class FixVersionDecoder implements ByteProcessor {
     }
 
     int decode(final ByteBuf buffer, final int offset, final int length) {
-        count = 0;
+        if (version != null && version.matches(buffer, offset, length))
+            return offset + version.length();
+        else
+            return setVersion(buffer, offset, length);
+    }
 
-        int sohIndex = buffer.forEachByte(offset, length, this);
+    private int setVersion(final ByteBuf buffer, final int offset, final int length) {
+        int sohIndex = buffer.indexOf(offset, offset + length, SOH);
         if (sohIndex < 0)
             return sohIndex;
 
-        if (count == 1)
+        if (sohIndex == offset)
             notBeginString();
 
-        if (version == null || !version.equals(bytes, count))
-            version = FixVersion.fromBytes(bytes, count);
+        version = FixVersion.fromBuffer(buffer, offset, sohIndex + 1 - offset);
 
         return sohIndex + 1;
-    }
-
-    @Override
-    public boolean process(final byte value) {
-        if (count == capacity)
-            expand();
-
-        bytes[count++] = value;
-
-        return value != SOH;
-    }
-
-    private void expand() {
-        capacity *= 2;
-
-        bytes = Arrays.copyOf(bytes, capacity);
     }
 
     private static void notBeginString() {

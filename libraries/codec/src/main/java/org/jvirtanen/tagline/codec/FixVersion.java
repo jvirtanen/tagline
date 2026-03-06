@@ -6,7 +6,6 @@ package org.jvirtanen.tagline.codec;
 import static java.nio.charset.StandardCharsets.*;
 
 import io.netty.buffer.ByteBuf;
-import java.util.Arrays;
 
 /**
  * The FIX protocol version.
@@ -107,8 +106,12 @@ public class FixVersion {
         return beginString;
     }
 
-    static FixVersion fromBytes(final byte[] bytes, final int length) {
-        return new FixVersion(Arrays.copyOf(bytes, length));
+    static FixVersion fromBuffer(final ByteBuf buffer, final int offset, final int length) {
+        var bytes = new byte[length];
+
+        buffer.getBytes(offset, bytes);
+
+        return new FixVersion(bytes);
     }
 
     int length() {
@@ -122,8 +125,27 @@ public class FixVersion {
             buffer.writeBytes(bytes);
     }
 
-    boolean equals(final byte[] bytes, final int length) {
-        return Arrays.equals(this.bytes, 0, this.length, bytes, 0, length);
+    boolean matches(final ByteBuf buffer, final int offset, final int length) {
+        if (length < this.length)
+            return false;
+
+        if (bits != 0)
+            return bitsMatch(buffer, offset);
+        else
+            return bytesMatch(buffer, offset);
+    }
+
+    private boolean bitsMatch(final ByteBuf buffer, final int offset) {
+        return buffer.getLong(offset) == bits;
+    }
+
+    private boolean bytesMatch(final ByteBuf buffer, final int offset) {
+        for (int i = 0; i < length; i++) {
+            if (buffer.getByte(offset + i) != bytes[i])
+                return false;
+        }
+
+        return true;
     }
 
     private static String getBeginString(final byte[] bytes) {
