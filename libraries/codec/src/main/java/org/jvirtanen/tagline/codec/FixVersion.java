@@ -5,6 +5,7 @@ package org.jvirtanen.tagline.codec;
 
 import static java.nio.charset.StandardCharsets.*;
 
+import io.netty.buffer.ByteBuf;
 import java.util.Arrays;
 
 /**
@@ -114,12 +115,11 @@ public class FixVersion {
         return length;
     }
 
-    byte[] bytes() {
-        return bytes;
-    }
-
-    long bits() {
-        return bits;
+    void encode(final ByteBuf buffer) {
+        if (bits != 0)
+            buffer.writeLong(bits);
+        else
+            buffer.writeBytes(bytes);
     }
 
     boolean equals(final byte[] bytes, final int length) {

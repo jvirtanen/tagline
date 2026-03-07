@@ -3,10 +3,12 @@
  */
 package org.jvirtanen.tagline.codec;
 
+import static java.nio.charset.StandardCharsets.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.jvirtanen.tagline.codec.FixConstants.*;
 import static org.jvirtanen.tagline.codec.FixVersion.*;
 
+import io.netty.buffer.Unpooled;
 import org.junit.jupiter.api.Test;
 
 class FixVersionTest {
@@ -44,20 +46,13 @@ class FixVersionTest {
     }
 
     @Test
-    void bytes() {
-        byte[] bytes = { 'F', 'I', 'X', '.', '4', '.', '2', SOH, };
-
-        assertArrayEquals(bytes, FIX_4_2.bytes());
+    void encodeBits() {
+        assertEquals("FIX.4.2\u0001", encode(FIX_4_2));
     }
 
     @Test
-    void bits() {
-        assertEquals(0x4649582e342e3201l, FIX_4_2.bits());
-    }
-
-    @Test
-    void noBits() {
-        assertEquals(0, FIXT_1_1.bits());
+    void encodeBytes() {
+        assertEquals("FIXT.1.1\u0001", encode(FIXT_1_1));
     }
 
     @Test
@@ -86,6 +81,14 @@ class FixVersionTest {
         byte[] bytes = { 'F', 'I', 'X', '.', '4', '.', '2', ' ', ' ', SOH, };
 
         assertFalse(FIX_4_2.equals(bytes, 10));
+    }
+
+    private static String encode(final FixVersion value) {
+        var buffer = Unpooled.buffer();
+
+        value.encode(buffer);
+
+        return buffer.toString(ISO_8859_1);
     }
 
 }
