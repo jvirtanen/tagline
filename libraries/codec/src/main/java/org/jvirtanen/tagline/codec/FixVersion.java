@@ -4,13 +4,14 @@
 package org.jvirtanen.tagline.codec;
 
 import static java.nio.charset.StandardCharsets.*;
+import static org.jvirtanen.tagline.codec.FixConstants.*;
 
 import io.netty.buffer.ByteBuf;
 
 /**
  * The FIX protocol version.
  */
-public class FixVersion {
+public abstract class FixVersion {
 
     /**
      * FIX 4.2.
@@ -34,10 +35,6 @@ public class FixVersion {
 
     private final String beginString;
 
-    private final int length;
-    private final byte[] bytes;
-    private final long bits;
-
     /**
      * Construct a new instance.
      *
@@ -45,23 +42,32 @@ public class FixVersion {
      * @return a new instance
      */
     public static FixVersion of(final String beginString) {
-        return new FixVersion(beginString, getBytes(beginString));
+        var bytes = toBytes(beginString);
+
+        if (bytes.length == 8)
+            return new Bits(beginString, toBits(bytes));
+        else
+            return new Bytes(beginString, bytes);
     }
 
     static FixVersion of(final ByteBuf buffer, final int offset, final int length) {
-        var bytes = new byte[length];
+        var beginString = buffer.toString(offset, length - 1, ISO_8859_1);
 
-        buffer.getBytes(offset, bytes);
+        if (length == 8) {
+            long bits = buffer.getLong(offset);
 
-        return new FixVersion(getBeginString(bytes), bytes);
+            return new Bits(beginString, bits);
+        } else {
+            var bytes = new byte[length];
+
+            buffer.getBytes(offset, bytes);
+
+            return new Bytes(beginString, bytes);
+        }
     }
 
-    private FixVersion(final String beginString, final byte[] bytes) {
+    private FixVersion(final String beginString) {
         this.beginString = beginString;
-
-        this.length = bytes.length;
-        this.bytes = bytes;
-        this.bits = getBits(bytes);
     }
 
     /**
@@ -111,52 +117,17 @@ public class FixVersion {
         return beginString;
     }
 
-    int length() {
-        return length;
-    }
+    abstract int length();
 
-    void encode(final ByteBuf buffer) {
-        if (bits != 0)
-            buffer.writeLong(bits);
-        else
-            buffer.writeBytes(bytes);
-    }
+    abstract void encode(ByteBuf buffer);
 
-    boolean matches(final ByteBuf buffer, final int offset, final int length) {
-        if (length < this.length)
-            return false;
+    abstract boolean matches(ByteBuf buffer, int offset, int length);
 
-        if (bits != 0)
-            return bitsMatch(buffer, offset);
-        else
-            return bytesMatch(buffer, offset);
-    }
-
-    private boolean bitsMatch(final ByteBuf buffer, final int offset) {
-        return buffer.getLong(offset) == bits;
-    }
-
-    private boolean bytesMatch(final ByteBuf buffer, final int offset) {
-        for (int i = 0; i < length; i++) {
-            if (buffer.getByte(offset + i) != bytes[i])
-                return false;
-        }
-
-        return true;
-    }
-
-    private static String getBeginString(final byte[] bytes) {
-        return new String(bytes, 0, bytes.length - 1, ISO_8859_1);
-    }
-
-    private static byte[] getBytes(final String beginString) {
+    private static byte[] toBytes(final String beginString) {
         return String.format("%s\u0001", beginString).getBytes(ISO_8859_1);
     }
 
-    private static long getBits(final byte[] bytes) {
-        if (bytes.length != 8)
-            return 0;
-
+    private static long toBits(final byte[] bytes) {
         long bits = 0;
 
         for (int i = 0; i < 8; i++) {
@@ -165,6 +136,73 @@ public class FixVersion {
         }
 
         return bits;
+    }
+
+    private static class Bytes extends FixVersion {
+
+        final byte[] value;
+
+        Bytes(final String beginString, final byte[] value) {
+            super(beginString);
+
+            this.value = value;
+        }
+
+        @Override
+        int length() {
+            return value.length;
+        }
+
+        @Override
+        void encode(final ByteBuf buffer) {
+            buffer.writeBytes(value);
+        }
+
+        @Override
+        boolean matches(final ByteBuf buffer, final int offset, final int length) {
+            int limit = value.length;
+
+            if (length < limit)
+                return false;
+
+            for (int i = 0; i < limit; i++) {
+                if (buffer.getByte(offset + i) != value[i])
+                    return false;
+            }
+
+            return true;
+        }
+
+    }
+
+    private static class Bits extends FixVersion {
+
+        private final long value;
+
+        Bits(final String beginString, final long value) {
+            super(beginString);
+
+            this.value = value;
+        }
+
+        @Override
+        int length() {
+            return 8;
+        }
+
+        @Override
+        void encode(final ByteBuf buffer) {
+            buffer.writeLong(value);
+        }
+
+        @Override
+        boolean matches(final ByteBuf buffer, final int offset, final int length) {
+            if (length < 8)
+                return false;
+
+            return buffer.getLong(offset) == value;
+        }
+
     }
 
 }
