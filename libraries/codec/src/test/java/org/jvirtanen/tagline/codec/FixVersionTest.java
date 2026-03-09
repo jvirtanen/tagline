@@ -25,15 +25,15 @@ class FixVersionTest {
     }
 
     @Test
-    void fromBuffer() {
+    void ofBytes() {
         var buffer = copiedBuffer("\u0000\u0000FIX.4.2\u0001\u0000\u0000");
 
-        assertEquals(FIX_4_2, FixVersion.fromBuffer(buffer, 2, 8));
+        assertEquals(FIX_4_2, FixVersion.of(buffer, 2, 8));
     }
 
     @Test
     void equals() {
-        assertEquals(FIX_4_2, new FixVersion("FIX.4.2"));
+        assertEquals(FIX_4_2, FixVersion.of("FIX.4.2"));
     }
 
     @Test

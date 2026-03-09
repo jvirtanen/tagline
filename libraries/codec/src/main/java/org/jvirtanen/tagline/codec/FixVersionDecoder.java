@@ -34,7 +34,7 @@ class FixVersionDecoder {
         if (sohIndex == offset)
             notBeginString();
 
-        version = FixVersion.fromBuffer(buffer, offset, sohIndex + 1 - offset);
+        version = FixVersion.of(buffer, offset, sohIndex + 1 - offset);
 
         return sohIndex + 1;
     }

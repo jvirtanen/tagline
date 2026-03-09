@@ -15,22 +15,22 @@ public class FixVersion {
     /**
      * FIX 4.2.
      */
-    public static final FixVersion FIX_4_2 = new FixVersion("FIX.4.2");
+    public static final FixVersion FIX_4_2 = FixVersion.of("FIX.4.2");
 
     /**
      * FIX 4.3.
      */
-    public static final FixVersion FIX_4_3 = new FixVersion("FIX.4.3");
+    public static final FixVersion FIX_4_3 = FixVersion.of("FIX.4.3");
 
     /**
      * FIX 4.4.
      */
-    public static final FixVersion FIX_4_4 = new FixVersion("FIX.4.4");
+    public static final FixVersion FIX_4_4 = FixVersion.of("FIX.4.4");
 
     /**
      * FIXT 1.1.
      */
-    public static final FixVersion FIXT_1_1 = new FixVersion("FIXT.1.1");
+    public static final FixVersion FIXT_1_1 = FixVersion.of("FIXT.1.1");
 
     private final String beginString;
 
@@ -42,13 +42,18 @@ public class FixVersion {
      * Construct a new instance.
      *
      * @param beginString the BeginString(8) value
+     * @return a new instance
      */
-    public FixVersion(final String beginString) {
-        this(beginString, getBytes(beginString));
+    public static FixVersion of(final String beginString) {
+        return new FixVersion(beginString, getBytes(beginString));
     }
 
-    private FixVersion(final byte[] bytes) {
-        this(getBeginString(bytes), bytes);
+    static FixVersion of(final ByteBuf buffer, final int offset, final int length) {
+        var bytes = new byte[length];
+
+        buffer.getBytes(offset, bytes);
+
+        return new FixVersion(getBeginString(bytes), bytes);
     }
 
     private FixVersion(final String beginString, final byte[] bytes) {
@@ -104,14 +109,6 @@ public class FixVersion {
     @Override
     public String toString() {
         return beginString;
-    }
-
-    static FixVersion fromBuffer(final ByteBuf buffer, final int offset, final int length) {
-        var bytes = new byte[length];
-
-        buffer.getBytes(offset, bytes);
-
-        return new FixVersion(bytes);
     }
 
     int length() {
