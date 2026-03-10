@@ -3,10 +3,13 @@
  */
 package org.jvirtanen.tagline.codec;
 
+import static java.nio.charset.StandardCharsets.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.jvirtanen.tagline.codec.FixConstants.*;
 import static org.jvirtanen.tagline.codec.FixVersion.*;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import org.junit.jupiter.api.Test;
 
 class FixVersionTest {
@@ -22,19 +25,19 @@ class FixVersionTest {
     }
 
     @Test
-    void fromBytes() {
-        byte[] bytes = { 'F', 'I', 'X', '.', '4', '.', '2', SOH, 0, 0, };
+    void ofBytes() {
+        var buffer = copiedBuffer("\u0000\u0000FIX.4.2\u0001\u0000\u0000");
 
-        assertEquals(FIX_4_2, FixVersion.fromBytes(bytes, 8));
+        assertEquals(FIX_4_2, FixVersion.of(buffer, 2, 8));
     }
 
     @Test
-    void equalsObject() {
-        assertEquals(FIX_4_2, new FixVersion("FIX.4.2"));
+    void equals() {
+        assertEquals(FIX_4_2, FixVersion.of("FIX.4.2"));
     }
 
     @Test
-    void doesNotEqualObject() {
+    void doesNotEqual() {
         assertNotEquals(FIX_4_2, FIX_4_3);
     }
 
@@ -44,48 +47,67 @@ class FixVersionTest {
     }
 
     @Test
-    void bytes() {
-        byte[] bytes = { 'F', 'I', 'X', '.', '4', '.', '2', SOH, };
-
-        assertArrayEquals(bytes, FIX_4_2.bytes());
+    void encodeBits() {
+        assertEquals("FIX.4.2\u0001", encode(FIX_4_2));
     }
 
     @Test
-    void bits() {
-        assertEquals(0x4649582e342e3201l, FIX_4_2.bits());
+    void encodeBytes() {
+        assertEquals("FIXT.1.1\u0001", encode(FIXT_1_1));
     }
 
     @Test
-    void noBits() {
-        assertEquals(0, FIXT_1_1.bits());
+    void bitsMatch() {
+        var buffer = copiedBuffer("\u0000\u0000FIX.4.2\u0001\u0000\u0000");
+
+        assertTrue(FIX_4_2.matches(buffer, 2, 10));
     }
 
     @Test
-    void equalsBytes() {
-        byte[] bytes = { 'F', 'I', 'X', '.', '4', '.', '2', SOH, 0, 0, };
+    void bitsDoNotMatch() {
+        var buffer = copiedBuffer("\u0000\u0000FIX.4.3\u0001\u0000\u0000");
 
-        assertTrue(FIX_4_2.equals(bytes, 8));
+        assertFalse(FIX_4_2.matches(buffer, 2, 10));
     }
 
     @Test
-    void doesNotEqualBytes() {
-        byte[] bytes = { 'F', 'I', 'X', '.', '4', '.', '3', SOH, 0, 0, };
+    void bytesMatch() {
+        var buffer = copiedBuffer("\u0000\u0000FIXT.1.1\u0001\u0000\u0000");
 
-        assertFalse(FIX_4_2.equals(bytes, 8));
+        assertTrue(FIXT_1_1.matches(buffer, 2, 11));
     }
 
     @Test
-    void doesNotEqualTooFewBytes() {
-        byte[] bytes = { 'F', 'I', 'X', '.', '4', '.', };
+    void bytesDoNotMatch() {
+        var buffer = copiedBuffer("\u0000\u0000FIX.4.3\u0001\u0000\u0000");
 
-        assertFalse(FIX_4_2.equals(bytes, 6));
+        assertFalse(FIXT_1_1.matches(buffer, 2, 10));
     }
 
     @Test
-    void doesNotEqualTooManyBytes() {
-        byte[] bytes = { 'F', 'I', 'X', '.', '4', '.', '2', ' ', ' ', SOH, };
+    void doesNotMatchTooFewBytes() {
+        var buffer = copiedBuffer("\u0000\u0000FIX.4.");
 
-        assertFalse(FIX_4_2.equals(bytes, 10));
+        assertFalse(FIX_4_2.matches(buffer, 2, 6));
+    }
+
+    @Test
+    void doesNotMatchTooManyBytes() {
+        var buffer = copiedBuffer("\u0000\u0000FIX.4.2  \u0001");
+
+        assertFalse(FIX_4_2.matches(buffer, 2, 10));
+    }
+
+    private static ByteBuf copiedBuffer(final String bytes) {
+        return Unpooled.copiedBuffer(bytes, ISO_8859_1);
+    }
+
+    private static String encode(final FixVersion value) {
+        var buffer = Unpooled.buffer();
+
+        value.encode(buffer);
+
+        return buffer.toString(ISO_8859_1);
     }
 
 }

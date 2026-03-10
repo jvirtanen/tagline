@@ -62,13 +62,6 @@ class FixVersionDecoderTest {
     }
 
     @Test
-    void expand() {
-        var value = "a".repeat(17);
-
-        assertEquals(18, decode(String.format("%s\u0001", value)));
-    }
-
-    @Test
     void empty() {
         assertNotBeginString("\u0001");
     }
