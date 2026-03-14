@@ -17,6 +17,9 @@ import java.util.List;
  * and {@link ReferenceCountUtil#release(Object)} to manage the reference count
  * manually, or use, for example, {@link SimpleChannelInboundHandler} that
  * automatically decrements the reference count.</p>
+ *
+ * <p>Note that this handler is stateful so each channel must have their own
+ * instance.</p>
  */
 public class FixFieldListDecoder extends MessageToMessageDecoder<InboundFixMessage> {
 

@@ -11,7 +11,10 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import java.util.List;
 
 /**
- * An inbound FIX message decoder.
+ * <p>An inbound FIX message decoder.</p>
+ *
+ * <p>Note that this handler is stateful so each channel must have their own
+ * instance.</p>
  */
 public class InboundFixMessageDecoder extends ByteToMessageDecoder {
 

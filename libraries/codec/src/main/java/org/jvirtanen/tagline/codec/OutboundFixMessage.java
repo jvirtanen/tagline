@@ -6,10 +6,12 @@ package org.jvirtanen.tagline.codec;
 /**
  * <p>An outbound FIX message.</p>
  *
- * <p>The {@linkplain #content() content} of an outbound FIX message is the
- * encoded FIX message to be sent excluding the fields BeginString(8),
- * BodyLength(9), and CheckSum(10). {@link OutboundFixMessageEncoder} generates
- * these fields on demand.</p>
+ * <p>The {@linkplain #content() content} of an outbound FIX message contains
+ * all the bytes in the outgoing message with the exception of the
+ * BeginString(8), BodyLength(9), and CheckSum(10) fields, which {@link
+ * OutboundFixMessageEncoder} generates on demand. When you invoke a method to
+ * add a field, the method immediately encodes and appends the field into the
+ * content.</p>
  */
 public interface OutboundFixMessage extends FixMessage {
 
@@ -21,6 +23,7 @@ public interface OutboundFixMessage extends FixMessage {
      * @return this instance
      * @throws IllegalArgumentException if the tag is less than 0 or greater
      *     than 9999999
+     * @see FixValue#asBoolean()
      */
     OutboundFixMessage addBoolean(int tag, boolean value);
 
@@ -33,6 +36,7 @@ public interface OutboundFixMessage extends FixMessage {
      * @return this instance
      * @throws IllegalArgumentException if the tag is less than 0 or greater
      *     than 9999999
+     * @see FixValue#asChar()
      */
     OutboundFixMessage addChar(int tag, char value);
 
@@ -44,6 +48,7 @@ public interface OutboundFixMessage extends FixMessage {
      * @return this instance
      * @throws IllegalArgumentException if the tag is less than 0 or greater
      *     than 9999999
+     * @see FixValue#asInt()
      */
     OutboundFixMessage addInt(int tag, long value);
 
@@ -55,6 +60,7 @@ public interface OutboundFixMessage extends FixMessage {
      * @return this instance
      * @throws IllegalArgumentException if the tag is less than 0 or greater
      *     than 9999999
+     * @see FixValue#asFloat(FixFloat)
      */
     OutboundFixMessage addFloat(int tag, FixFloat value);
 
@@ -68,6 +74,7 @@ public interface OutboundFixMessage extends FixMessage {
      * @return this instance
      * @throws IllegalArgumentException if the tag is less than 0 or greater
      *     than 9999999 or if the scale is less than 0 or greater than 18
+     * @see FixValue#asFloat()
      */
     OutboundFixMessage addFloat(int tag, double value, int scale);
 
@@ -80,6 +87,7 @@ public interface OutboundFixMessage extends FixMessage {
      * @return this instance
      * @throws IllegalArgumentException if the tag is less than 0 or greater
      *     than 9999999
+     * @see FixValue#asString()
      */
     OutboundFixMessage addString(int tag, CharSequence value);
 
@@ -91,6 +99,7 @@ public interface OutboundFixMessage extends FixMessage {
      * @return this instance
      * @throws IllegalArgumentException if the tag is less than 0 or greater
      *     than 9999999
+     * @see FixValue#asDate(FixDate)
      */
     OutboundFixMessage addDate(int tag, FixDate value);
 
@@ -103,6 +112,7 @@ public interface OutboundFixMessage extends FixMessage {
      * @return this instance
      * @throws IllegalArgumentException if the tag is less than 0 or greater
      *     than 9999999
+     * @see FixValue#asTime(FixTime)
      */
     OutboundFixMessage addTime(int tag, FixTime value, FixTimeFormat format);
 
@@ -115,6 +125,7 @@ public interface OutboundFixMessage extends FixMessage {
      * @return this instance
      * @throws IllegalArgumentException if the tag is less than 0 or greater
      *     than 9999999
+     * @see FixValue#asTimestamp(FixTimestamp)
      */
     OutboundFixMessage addTimestamp(int tag, FixTimestamp value, FixTimeFormat format);
 
@@ -128,6 +139,7 @@ public interface OutboundFixMessage extends FixMessage {
      * @return this instance
      * @throws IllegalArgumentException if the tag is less than 0 or greater
      *     than 9999999
+     * @see FixValue#asTimestamp()
      */
     OutboundFixMessage addTimestamp(int tag, long value, FixTimeFormat format);
 
@@ -139,6 +151,7 @@ public interface OutboundFixMessage extends FixMessage {
      * @return this instance
      * @throws IllegalArgumentException if the tag is less than 0 or greater
      *     than 9999999
+     * @see FixValue#asBytes(byte[])
      */
     OutboundFixMessage addBytes(int tag, byte[] value);
 
