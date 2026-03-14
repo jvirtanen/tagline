@@ -6,36 +6,42 @@ package org.jvirtanen.tagline.codec;
 import io.netty.buffer.ByteBuf;
 
 /**
- * A FIX field list.
+ * <p>A FIX field list.</p>
+ *
+ * <p>This data structure provides efficient read-only random access to a
+ * sequence of fields, each consisting of a tag and {@linkplain FixValue a
+ * value}. This is the primary representation of a received FIX message and
+ * the logical counterpart of {@link OutboundFixMessage}, which represents an
+ * outgoing FIX message.</p>
  */
 public interface FixFieldList {
 
     /**
-     * Decode a message.
+     * Decode a message. This will clear and populate this instance with the
+     * decoded fields.
      *
      * @param message a message
-     * @throws FixDecoderException if the message cannot be decoded as FIX
-     *     fields
+     * @throws FixDecoderException if the message cannot be decoded as fields
      */
     void decode(InboundFixMessage message);
 
     /**
-     * Decode the readable bytes in a buffer.
+     * Decode the readable bytes in a buffer. This will clear and populate this
+     * instance with the decoded fields.
      *
      * @param buffer a buffer
-     * @throws FixDecoderException if the bytes cannot be decoded as FIX
-     *     fields
+     * @throws FixDecoderException if the bytes cannot be decoded as fields
      */
     void decode(ByteBuf buffer);
 
     /**
-     * Decode bytes in a buffer.
+     * Decode bytes in a buffer. This will clear and populate this instance
+     * with the decoded fields.
      *
      * @param buffer a buffer
      * @param offset the offset
      * @param length the length
-     * @throws FixDecoderException if the bytes cannot be decoded as FIX
-     *     fields
+     * @throws FixDecoderException if the bytes cannot be decoded as fields
      */
     void decode(ByteBuf buffer, int offset, int length);
 

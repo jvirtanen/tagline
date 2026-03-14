@@ -12,7 +12,10 @@ import io.netty.handler.codec.MessageToMessageEncoder;
 import java.util.List;
 
 /**
- * An outbound FIX message encoder.
+ * <p>An outbound FIX message encoder.</p>
+ *
+ * <p>Note that this handler is stateful so each channel must have their own
+ * instance.</p>
  */
 public class OutboundFixMessageEncoder extends MessageToMessageEncoder<OutboundFixMessage> {
 

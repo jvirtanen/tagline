@@ -4,7 +4,18 @@
 package org.jvirtanen.tagline.codec;
 
 /**
- * A FIX value.
+ * <p>A FIX value.</p>
+ *
+ * <p>Any FIX value can be treated as a String, hence this interface extends
+ * {@link CharSequence}. You can typically pass a {@code FixValue} to most
+ * methods you would pass a {@link String} as these often accept a {@code
+ * CharSequence}.</p>
+ *
+ * <p>This interface also contains methods to decode this value as other data
+ * types, such as Boolean, Char, or Int. Note that this decoding happens on
+ * demand whenever you invoke these methods. For the best performance, you
+ * should store their return values instead of invoking them multiple
+ * times.</p>
  */
 public interface FixValue extends CharSequence {
 
@@ -40,6 +51,7 @@ public interface FixValue extends CharSequence {
      *
      * @return this value as a Boolean
      * @throws FixDecoderException if this value is not a Boolean
+     * @see OutboundFixMessage#addBoolean(int,boolean)
      */
     boolean asBoolean();
 
@@ -48,6 +60,7 @@ public interface FixValue extends CharSequence {
      *
      * @return this value as a Char
      * @throws FixDecoderException if this value is not a Char
+     * @see OutboundFixMessage#addChar(int,char)
      */
     char asChar();
 
@@ -57,6 +70,7 @@ public interface FixValue extends CharSequence {
      * @return this value as an Int
      * @throws FixDecoderException if this value is not an Int or cannot be
      *     represented as a {@code long}
+     * @see OutboundFixMessage#addInt(int,long)
      */
     long asInt();
 
@@ -66,6 +80,7 @@ public interface FixValue extends CharSequence {
      * @param container a value container
      * @throws FixDecoderException if this value is not a Float or cannot be
      *     represented as a {@link FixFloat}
+     * @see OutboundFixMessage#addFloat(int,FixFloat)
      */
     void asFloat(FixFloat container);
 
@@ -75,6 +90,7 @@ public interface FixValue extends CharSequence {
      * @return this value as a Float
      * @throws FixDecoderException if this value is not a Float or cannot be
      *     represented as a {@link FixFloat}
+     * @see OutboundFixMessage#addFloat(int,double,int)
      */
     double asFloat();
 
@@ -82,6 +98,7 @@ public interface FixValue extends CharSequence {
      * Get this value as a String.
      *
      * @return this value as a String
+     * @see OutboundFixMessage#addString(int,CharSequence)
      */
     CharSequence asString();
 
@@ -91,6 +108,7 @@ public interface FixValue extends CharSequence {
      * @param container a value container
      * @throws FixDecoderException if this value is not a UTCDate or
      *     LocalMktDate
+     * @see OutboundFixMessage#addDate(int,FixDate)
      */
     void asDate(FixDate container);
 
@@ -99,6 +117,7 @@ public interface FixValue extends CharSequence {
      *
      * @param container a value container
      * @throws FixDecoderException if this value is not a UTCTimeOnly
+     * @see OutboundFixMessage#addTime(int,FixTime,FixTimeFormat)
      */
     void asTime(FixTime container);
 
@@ -107,6 +126,7 @@ public interface FixValue extends CharSequence {
      *
      * @param container a value container
      * @throws FixDecoderException if this value is not a UTCTimestamp
+     * @see OutboundFixMessage#addTimestamp(int,FixTimestamp,FixTimeFormat)
      */
     void asTimestamp(FixTimestamp container);
 
@@ -116,6 +136,7 @@ public interface FixValue extends CharSequence {
      * @return this value as number of milliseconds from the epoch of
      *     1970-01-01T00:00:00.000Z
      * @throws FixDecoderException if this value is not a UTCTimestamp
+     * @see OutboundFixMessage#addTimestamp(int,long,FixTimeFormat)
      */
     long asTimestamp();
 
@@ -127,6 +148,7 @@ public interface FixValue extends CharSequence {
      * @throws IndexOutOfBoundsException if the length of the value container is
      *     less than the length of this value
      * @see #length()
+     * @see OutboundFixMessage#addBytes(int,byte[])
      */
     void asBytes(byte[] container);
 
