@@ -39,3 +39,5 @@ For more information, see [Tagline Handbook](documentation/handbook.md).
 ## License
 
 Copyright 2024 Jussi Virtanen.
+
+Released under the Apache License, Version 2.0. See `LICENSE.txt` for details.
