@@ -34,7 +34,18 @@ channel.writeAndFlush(new DefaultOutboundFixMessage(FixVersion.FIX_4_2, channel.
     .addInt(108, 30));
 ```
 
-For more information, see [Tagline Handbook](documentation/handbook.md).
+See [more use cases](documentation/handbook.md#usage) in Tagline Handbook.
+
+## Performance
+
+Tagline incurs as little performance overhead as possible. To illustrate, it
+encodes an Order Single (D) message in 135 ns and decodes one in 70 ns on an
+Apple MacBook Pro (M1 Pro, 2021) with Eclipse Temurin 25 and macOS Tahoe.
+
+Read [more about performance](documentation/handbook.md#performance) in Tagline
+Handbook, or run [Tagline Bench](tests/bench), [Tagline
+Acceptor](tests/acceptor), and [Tagline Initiator](tests/initiator) to see for
+yourself.
 
 ## License
 
