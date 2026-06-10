@@ -24,67 +24,25 @@ import org.openjdk.jmh.annotations.Setup;
 
 public class FixIntDecoderBench extends Bench {
 
-    private byte[] oneDigitBytes;
-    private byte[] twoDigitBytes;
-    private byte[] threeDigitBytes;
-    private byte[] fourDigitBytes;
-    private byte[] fiveDigitBytes;
-    private byte[] sixDigitBytes;
-    private byte[] sevenDigitBytes;
-    private byte[] largeValueBytes;
+    private byte[] zeroBytes;
+    private byte[] maxFastPathBytes;
     private byte[] maxValueBytes;
 
     @Setup(Level.Iteration)
     public void setUp() {
-        oneDigitBytes = getBytes(1);
-        twoDigitBytes = getBytes(12);
-        threeDigitBytes = getBytes(123);
-        fourDigitBytes = getBytes(1234);
-        fiveDigitBytes = getBytes(12345);
-        sixDigitBytes = getBytes(123456);
-        sevenDigitBytes = getBytes(1234567);
-        largeValueBytes = getBytes(Long.MAX_VALUE / 10);
-        maxValueBytes = getBytes(Long.MAX_VALUE);
+        zeroBytes = getBytes("0");
+        maxFastPathBytes = getBytes("999999999999999999");
+        maxValueBytes = getBytes(Long.toString(Long.MAX_VALUE));
     }
 
     @Benchmark
-    public long decodeOneDigit() {
-        return decode(oneDigitBytes);
+    public long decodeZero() {
+        return decode(zeroBytes);
     }
 
     @Benchmark
-    public long decodeTwoDigits() {
-        return decode(twoDigitBytes);
-    }
-
-    @Benchmark
-    public long decodeThreeDigits() {
-        return decode(threeDigitBytes);
-    }
-
-    @Benchmark
-    public long decodeFourDigits() {
-        return decode(fourDigitBytes);
-    }
-
-    @Benchmark
-    public long decodeFiveDigits() {
-        return decode(fiveDigitBytes);
-    }
-
-    @Benchmark
-    public long decodeSixDigits() {
-        return decode(sixDigitBytes);
-    }
-
-    @Benchmark
-    public long decodeSevenDigits() {
-        return decode(sevenDigitBytes);
-    }
-
-    @Benchmark
-    public long decodeLargeValue() {
-        return decode(largeValueBytes);
+    public long decodeMaxFastPath() {
+        return decode(maxFastPathBytes);
     }
 
     @Benchmark
@@ -96,8 +54,8 @@ public class FixIntDecoderBench extends Bench {
         return FixIntDecoder.decode(bytes, 0, bytes.length);
     }
 
-    private static final byte[] getBytes(final long value) {
-        return Long.toString(value).getBytes(ISO_8859_1);
+    private static final byte[] getBytes(final String value) {
+        return value.getBytes(ISO_8859_1);
     }
 
 }
