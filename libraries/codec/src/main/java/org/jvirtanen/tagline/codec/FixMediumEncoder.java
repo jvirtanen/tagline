@@ -42,7 +42,7 @@ class FixMediumEncoder {
 
         switch (length) {
         case 2:
-            buffer.writeShort((short)(bits >> 48));
+            buffer.writeShort((int)(bits >> 48));
             break;
         case 3:
             buffer.writeMedium((int)(bits >> 40));
