@@ -48,6 +48,7 @@ public class DefaultOutboundFixMessageBench extends Bench {
 
     private ByteBuf content;
     private DefaultOutboundFixMessage message;
+    private DefaultFixFloat floatContainer;
 
     private long currentTimeMillis;
 
@@ -55,22 +56,39 @@ public class DefaultOutboundFixMessageBench extends Bench {
     public void setUp() {
         content = Unpooled.directBuffer(1024);
         message = new DefaultOutboundFixMessage(FIX_4_2, content);
+        floatContainer = new DefaultFixFloat();
 
         currentTimeMillis = System.currentTimeMillis();
     }
 
     @Benchmark
-    public DefaultOutboundFixMessage addInt() {
+    public DefaultOutboundFixMessage addIntMinBytes() {
         content.clear();
 
-        return message.addInt(MSG_SEQ_NUM, 5);
+        return message.addInt(MSG_SEQ_NUM, 0);
     }
 
     @Benchmark
-    public DefaultOutboundFixMessage addFloat() {
+    public DefaultOutboundFixMessage addIntMaxBytes() {
         content.clear();
 
-        return message.addFloat(PRICE, 150.00, 2);
+        return message.addInt(MSG_SEQ_NUM, Long.MAX_VALUE);
+    }
+
+    @Benchmark
+    public DefaultOutboundFixMessage addFloatMinBytes() {
+        content.clear();
+        floatContainer.setValue(0, 1);
+
+        return message.addFloat(PRICE, floatContainer);
+    }
+
+    @Benchmark
+    public DefaultOutboundFixMessage addFloatMaxBytes() {
+        content.clear();
+        floatContainer.setValue(Long.MAX_VALUE, 1);
+
+        return message.addFloat(PRICE, floatContainer);
     }
 
     @Benchmark
@@ -88,7 +106,7 @@ public class DefaultOutboundFixMessageBench extends Bench {
     }
 
     @Benchmark
-    public DefaultOutboundFixMessage addMany() {
+    public DefaultOutboundFixMessage addOrderSingle() {
         content.clear();
 
         message.addChar(MSG_TYPE, ORDER_SINGLE);
