@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Jussi Virtanen
+ * Copyright 2026 Jussi Virtanen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,41 +17,48 @@ package org.jvirtanen.tagline.codec;
 
 import static java.nio.charset.StandardCharsets.*;
 
+import java.math.BigDecimal;
 import org.jvirtanen.tagline.bench.Bench;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Setup;
 
-public class FixIntDecoderBench extends Bench {
+public class FixFloatDecoderBench extends Bench {
 
     private byte[] zeroBytes;
     private byte[] maxFastPathBytes;
     private byte[] maxValueBytes;
 
+    private FixFloat container;
+
     @Setup(Level.Iteration)
     public void setUp() {
-        zeroBytes = getBytes("0");
-        maxFastPathBytes = getBytes("999999999999999999");
-        maxValueBytes = getBytes(Long.toString(Long.MAX_VALUE));
+        zeroBytes = getBytes("0.0");
+        maxFastPathBytes = getBytes("9999999999999999.9");
+        maxValueBytes = getBytes(BigDecimal.valueOf(Long.MAX_VALUE).movePointLeft(1).toString());
+
+        container = new DefaultFixFloat();
     }
 
     @Benchmark
-    public long decodeZero() {
+    public FixFloat decodeZero() {
         return decode(zeroBytes);
     }
 
     @Benchmark
-    public long decodeMaxFastPath() {
+    public FixFloat decodeMaxFastPath() {
         return decode(maxFastPathBytes);
     }
 
     @Benchmark
-    public long decodeMaxValue() {
+    public FixFloat decodeMaxValue() {
         return decode(maxValueBytes);
     }
 
-    private long decode(final byte[] bytes) {
-        return FixIntDecoder.decode(bytes, 0, bytes.length);
+    private FixFloat decode(final byte[] bytes) {
+        FixFloatDecoder.decode(bytes, 0, bytes.length, container);
+
+        return container;
     }
 
     private static final byte[] getBytes(final String value) {

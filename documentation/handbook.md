@@ -255,6 +255,88 @@ If the CheckSum(10) check is enabled and the CheckSum(10) value in a message
 does not match the message content, `FixFieldListDecoder` considers the message
 garbled and throws a `GarbledFixMessageException`.
 
+## Performance
+
+Tagline decodes and encodes FIX messages with as little overhead as possible
+while still providing an idiomatic Netty development experience. Whenever
+these two objectives are in conflict, performance wins.
+
+### Optimizations
+
+Tagline's performance is primarily due to things it doesn't do: superfluous
+computation or memory allocation. This means that Tagline mostly works with
+simple types, such as primitives and arrays, instead of more complex or
+expensive data structures, such as `BigDecimal`, `HashMap`, or `String`. That
+said, it does employ a few specific optimization techniques as well:
+
+  - **Minimal copying.** Tagline avoids copying data when possible. An outgoing
+    message contains directly the bytes that will eventually go on the wire.
+    Received messages incur one bulk copy from a `ByteBuf` into a reused byte
+    array, which makes subsequent field accesses faster than they would be on
+    a direct buffer.
+
+  - **Lazy decoding.** When you receive a message, Tagline eagerly indexes it
+    to enable fast field access but lazily decodes only those values that you
+    actually do access.
+
+  - **Bulk operations.** When reading from and writing to a `ByteBuf`, Tagline
+    prefers bulk operations. For example, encoding an Int into an outgoing
+    message results in one `ByteBuf#writeBytes()`, and decoding an incoming
+    message body requires just one `ByteBuf#getBytes()`. As each operation on
+    a direct buffer has overhead, the fewer of these you need the smaller the
+    total overhead.
+
+  - **Object recycling.** Tagline uses Netty's `ChannelHandler`,
+    `FastThreadLocal`, and `Recycler` to retain and reuse long-lived objects.
+    This is essential for keeping the memory allocation rate in check while
+    providing an idiomatic Netty development experience.
+
+  - **Optimized subcodecs.** Tagline implements highly-optimized subcodecs for
+    the various message elements. For example, the Int and Float decoders have
+    fast paths for values that cannot overflow, and the tag encoder works fully
+    in terms of `long` bit operations, taking just around 25–40% of the time of
+    the Int encoder for the common cases of two or three digits.
+
+### Benchmarks
+
+These benchmarks illustrate Tagline's performance. The results were obtained on
+an Apple MacBook Pro (M1 Pro, 2021) with Eclipse Temurin 25 and macOS Tahoe. If
+you care about performance, make sure to run Tagline Bench, Tagline Acceptor,
+and Tagline Initiator on your own hardware.
+
+The following benchmarks show how long it takes to encode an outgoing message
+and decode a received message. It's worth reiterating here that encoding an
+outgoing message implicitly includes the addition of all of its fields whereas
+decoding a received message indexes its fields but does not decode their
+values; that will only happen lazily on demand.
+
+Benchmark                          | Latency
+-----------------------------------|---------:
+Encode an Order Single (D) message | 135 ns/op
+Decode an Order Single (D) message | 70 ns/op
+
+The benchmarks below drill down into adding Int and Float fields into an
+outgoing message. Note that the operations' latencies vary based on the number
+of digits to encode; the ranges below indicate the shortest and longest
+possible values.
+
+Operation                       | Latency
+--------------------------------|-----------:
+`OutboundFixMessage#addInt()`   | 13–30 ns/op
+`OutboundFixMessage#addFloat()` | 16–45 ns/op
+
+The final benchmarks highlighted here look at the other side, reading Int and
+Float values from a received message. As when encoding, the operations'
+latencies vary based on the number of digits to decode, with the slow paths
+kicking in at the points at which the values could potentially overflow.
+
+Operation                        | Latency
+---------------------------------|----------:
+`FixValue#asInt()` (fast path)   | 2–12 ns/op
+`FixValue#asInt()` (slow path)   | 27 ns/op
+`FixValue#asFloat()` (fast path) | 3–13 ns/op
+`FixValue#asFloat()` (slow path) | 28 ns/op
+
 ## Frequently Asked Questions
 
 See below for answers to some of the questions you might have.
