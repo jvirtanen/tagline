@@ -4,6 +4,28 @@ Tagline is a Financial Information Exchange (FIX) codec for Netty. This
 handbook assumes that you have prior experience working with both FIX and
 Netty.
 
+## Installation
+
+Tagline is available on Maven Central Repository:
+```xml
+<dependency>
+  <groupId>org.jvirtanen.tagline</groupId>
+  <artifactId>tagline-codec</artifactId>
+  <version><!-- the latest version --></version>
+</dependency>
+```
+
+See [the release notes](../CHANGELOG.md) for the latest version.
+
+Tagline requires Netty 4.2.x but does not directly depend on any specific
+Netty version. This way you can decide which one to use in your application.
+Tagline requires the following Netty libraries:
+
+  - `io.netty:netty-buffer`
+  - `io.netty:netty-codec`
+  - `io.netty:netty-common`
+  - `io.netty:netty-transport`
+
 ## Data Types
 
 Tagline implements the following standard data types:

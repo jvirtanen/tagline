@@ -12,6 +12,19 @@ a low-latency FIX application or a higher-level FIX protocol implementation.
 
 Tagline requires Java 11 or newer and Netty 4.2.x.
 
+## Installation
+
+Add Tagline to your project:
+```xml
+<dependency>
+  <groupId>org.jvirtanen.tagline</groupId>
+  <artifactId>tagline-codec</artifactId>
+  <version><!-- the latest version --></version>
+</dependency>
+```
+
+See [the release notes](CHANGELOG.md) for the latest version.
+
 ## Usage
 
 Add Tagline to a channel:
