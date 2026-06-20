@@ -29,6 +29,7 @@
   <scm>
     <connection>scm:git:git@github.com:jvirtanen/tagline.git</connection>
     <developerConnection>scm:git:git@github.com:jvirtanen/tagline.git</developerConnection>
+    <url>https://github.com/jvirtanen/tagline</url>
     <tag>HEAD</tag>
   </scm>
 
