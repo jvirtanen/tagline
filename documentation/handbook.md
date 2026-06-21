@@ -182,8 +182,8 @@ Note that the `FixFieldList` instances produced by `FixFieldListDecoder` use
 reference counting and resource pooling to reduce your application's memory
 allocation rate. A `SimpleChannelInboundHandler`, as above, automatically
 decrements the reference count. If you don't want that behavior, you can manage
-the reference count manually using `ReferenceCountUtil#retain()` and
-`ReferenceCountUtil#release()`.
+the reference count manually using `ReferenceCountUtil.retain()` and
+`ReferenceCountUtil.release()`.
 
 ### Handle a garbled message
 
