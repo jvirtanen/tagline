@@ -322,7 +322,7 @@ said, it does employ a few specific optimization techniques as well:
 ### Benchmarks
 
 These benchmarks illustrate Tagline's performance. The results were obtained on
-an Apple MacBook Pro (M1 Pro, 2021) with Eclipse Temurin 25 and macOS Tahoe. If
+an Apple MacBook Pro (M3 Max, 2023) with Eclipse Temurin 25 and macOS Tahoe. If
 you care about performance, make sure to run Tagline Bench, Tagline Acceptor,
 and Tagline Initiator on your own hardware.
 
@@ -334,8 +334,8 @@ values; that will only happen lazily on demand.
 
 Benchmark                          | Latency
 -----------------------------------|---------:
-Encode an Order Single (D) message | 135 ns/op
-Decode an Order Single (D) message | 70 ns/op
+Encode an Order Single (D) message | 100 ns/op
+Decode an Order Single (D) message | 56 ns/op
 
 The benchmarks below drill down into adding Int and Float fields into an
 outgoing message. Note that the operations' latencies vary based on the number
@@ -344,8 +344,8 @@ possible values.
 
 Operation                       | Latency
 --------------------------------|-----------:
-`OutboundFixMessage#addInt()`   | 13–30 ns/op
-`OutboundFixMessage#addFloat()` | 16–45 ns/op
+`OutboundFixMessage#addInt()`   | 7–23 ns/op
+`OutboundFixMessage#addFloat()` | 11–30 ns/op
 
 The final benchmarks highlighted here look at the other side, reading Int and
 Float values from a received message. As when encoding, the operations'
@@ -354,10 +354,10 @@ kicking in at the points at which the values could potentially overflow.
 
 Operation                        | Latency
 ---------------------------------|----------:
-`FixValue#asInt()` (fast path)   | 2–12 ns/op
-`FixValue#asInt()` (slow path)   | 27 ns/op
-`FixValue#asFloat()` (fast path) | 3–13 ns/op
-`FixValue#asFloat()` (slow path) | 28 ns/op
+`FixValue#asInt()` (fast path)   | 1–10 ns/op
+`FixValue#asInt()` (slow path)   | 20 ns/op
+`FixValue#asFloat()` (fast path) | 3–11 ns/op
+`FixValue#asFloat()` (slow path) | 22 ns/op
 
 ## Frequently Asked Questions
 
