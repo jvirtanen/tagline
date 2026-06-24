@@ -27,5 +27,5 @@ Follow these steps to publish a new release:
      ```
 
   5. [Add the release][GitHub] on GitHub.
-    
+
      [GitHub]: https://github.com/jvirtanen/tagline/releases/new
