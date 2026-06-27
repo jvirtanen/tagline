@@ -28,6 +28,15 @@ class FixDateDecoder {
         if (length != 8)
             notDate();
 
+        try {
+            decode(bytes, index, container);
+        } catch (IllegalArgumentException e) {
+            notDate();
+        }
+    }
+
+    static void decode(final byte[] bytes, final int index, final FixDate container) {
+
         // "20260627" = 0x3732363036323032
         long bits = (long)LONG.get(bytes, index);
 
@@ -36,7 +45,7 @@ class FixDateDecoder {
 
         // 0x7f - 0x09 = 0x76
         if (((bits | (bits + 0x7676767676767676l)) & 0x8080808080808080l) != 0)
-            notDate();
+            illegalArgument();
 
         // "20260627" = 0x001b0006001a0014
         bits = (10 * bits + (bits >>> 8)) & 0x00ff00ff00ff00ffl;
@@ -46,14 +55,14 @@ class FixDateDecoder {
         int month = (int)((bits >>> 32) & 0xff);
         int day = (int)((bits >>> 48) & 0xff);
 
-        try {
-            container
-                .setYear(100 * yearHigh + yearLow)
-                .setMonth(month)
-                .setDay(day);
-        } catch (IllegalArgumentException e) {
-            notDate();
-        }
+        container
+            .setYear(100 * yearHigh + yearLow)
+            .setMonth(month)
+            .setDay(day);
+    }
+
+    private static void illegalArgument() {
+        throw new IllegalArgumentException();
     }
 
     private static void notDate() {
