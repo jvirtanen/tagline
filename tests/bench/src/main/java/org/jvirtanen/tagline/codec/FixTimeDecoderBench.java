@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Jussi Virtanen
+ * Copyright 2026 Jussi Virtanen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Setup;
 
-public class FixDateDecoderBench extends Bench {
+public class FixTimeDecoderBench extends Bench {
 
     private byte[] bytes;
 
@@ -28,14 +28,21 @@ public class FixDateDecoderBench extends Bench {
 
     @Setup(Level.Iteration)
     public void setUp() {
-        bytes = new byte[] { '2', '0', '2', '4', '0', '5', '2', '6', };
+        bytes = new byte[] { '2', '2', ':', '0', '5', ':', '3', '0', '.', '2', '5', '0', };
 
         timestamp = new DefaultFixTimestamp();
     }
 
     @Benchmark
-    public DefaultFixTimestamp decode() {
-        FixDateDecoder.decode(bytes, 0, 8, timestamp);
+    public DefaultFixTimestamp decodeSecond() {
+        FixTimeDecoder.decode(bytes, 0, 8, timestamp);
+
+        return timestamp;
+    }
+
+    @Benchmark
+    public DefaultFixTimestamp decodeMilli() {
+        FixTimeDecoder.decode(bytes, 0, 12, timestamp);
 
         return timestamp;
     }

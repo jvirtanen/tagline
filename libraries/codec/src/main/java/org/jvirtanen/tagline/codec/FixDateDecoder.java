@@ -15,22 +15,54 @@
  */
 package org.jvirtanen.tagline.codec;
 
-import static org.jvirtanen.tagline.codec.ByteArrayDecoder.*;
+import static java.nio.ByteOrder.*;
+
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
 
 class FixDateDecoder {
+
+    private static final VarHandle LONG = MethodHandles.byteArrayViewVarHandle(long[].class, LITTLE_ENDIAN);
 
     static void decode(final byte[] bytes, final int index, final int length, final FixDate container) {
         if (length != 8)
             notDate();
 
         try {
-            container
-                .setYear(decodeFourDigits(bytes, index))
-                .setMonth(decodeTwoDigits(bytes, index + 4))
-                .setDay(decodeTwoDigits(bytes, index + 6));
+            decode(bytes, index, container);
         } catch (IllegalArgumentException e) {
             notDate();
         }
+    }
+
+    static void decode(final byte[] bytes, final int index, final FixDate container) {
+
+        // "20260627" = 0x3732363036323032
+        long bits = (long)LONG.get(bytes, index);
+
+        // "20260627" = 0x0702060006020002
+        bits -= 0x3030303030303030l;
+
+        // 0x7f - 0x09 = 0x76
+        if (((bits | (bits + 0x7676767676767676l)) & 0x8080808080808080l) != 0)
+            illegalArgument();
+
+        // "20260627" = 0x001b0006001a0014
+        bits = (10 * bits + (bits >>> 8)) & 0x00ff00ff00ff00ffl;
+
+        int yearHigh = (int)(bits & 0xff);
+        int yearLow = (int)((bits >>> 16) & 0xff);
+        int month = (int)((bits >>> 32) & 0xff);
+        int day = (int)((bits >>> 48) & 0xff);
+
+        container
+            .setYear(100 * yearHigh + yearLow)
+            .setMonth(month)
+            .setDay(day);
+    }
+
+    private static void illegalArgument() {
+        throw new IllegalArgumentException();
     }
 
     private static void notDate() {
