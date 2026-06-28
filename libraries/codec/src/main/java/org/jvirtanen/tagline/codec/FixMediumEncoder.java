@@ -38,32 +38,30 @@ class FixMediumEncoder {
             length++;
         } while (value > 0);
 
-        bits = Long.reverseBytes(bits);
-
         switch (length) {
         case 2:
-            buffer.writeShort((int)(bits >> 48));
+            buffer.writeShortLE((int)bits);
             break;
         case 3:
-            buffer.writeMedium((int)(bits >> 40));
+            buffer.writeMediumLE((int)bits);
             break;
         case 4:
-            buffer.writeInt((int)(bits >> 32));
+            buffer.writeIntLE((int)bits);
             break;
         case 5:
-            buffer.writeInt((int)(bits >> 32));
-            buffer.writeByte((int)(bits >> 24));
+            buffer.writeIntLE((int)bits);
+            buffer.writeByte((int)(bits >> 32));
             break;
         case 6:
-            buffer.writeInt((int)(bits >> 32));
-            buffer.writeShort((int)(bits >> 16));
+            buffer.writeIntLE((int)bits);
+            buffer.writeShortLE((int)(bits >> 32));
             break;
         case 7:
-            buffer.writeInt((int)(bits >> 32));
-            buffer.writeMedium((int)(bits >> 8));
+            buffer.writeIntLE((int)bits);
+            buffer.writeMediumLE((int)(bits >> 32));
             break;
         case 8:
-            buffer.writeLong(bits);
+            buffer.writeLongLE(bits);
             break;
         default:
             tooLargeMedium();
