@@ -17,7 +17,7 @@ package org.jvirtanen.tagline.codec;
 
 class MathUtil {
 
-    private static final int POWERS_OF_TWO[] = {
+    private static final int[] POWERS_OF_TWO = {
         1 << 0,
         1 << 1,
         1 << 2,
