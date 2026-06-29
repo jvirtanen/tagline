@@ -150,9 +150,7 @@ public class DefaultOutboundFixMessage extends DefaultFixMessage implements Outb
     @Override
     public DefaultOutboundFixMessage addTimestamp(final int tag, final FixTimestamp value, final FixTimeFormat format) {
         FixMediumEncoder.encode(tag, EQUALS, content);
-        FixDateEncoder.encode(value, content);
-        content.writeByte('-');
-        FixTimeEncoder.encode(value, format, content);
+        FixTimestampEncoder.encode(value, format, content);
         content.writeByte(SOH);
 
         return this;
