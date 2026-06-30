@@ -40,7 +40,7 @@ public class DirectByteBufBench extends Bench {
 
     private ByteProcessor calculator;
 
-    @Setup(Level.Iteration)
+    @Setup(Level.Trial)
     public void setUp() {
         bytes = new byte[SIZE];
 

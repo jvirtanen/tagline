@@ -52,7 +52,7 @@ public class DefaultOutboundFixMessageBench extends Bench {
 
     private long currentTimeMillis;
 
-    @Setup(Level.Iteration)
+    @Setup(Level.Trial)
     public void setUp() {
         content = Unpooled.directBuffer(1024);
         message = new DefaultOutboundFixMessage(FIX_4_2, content);

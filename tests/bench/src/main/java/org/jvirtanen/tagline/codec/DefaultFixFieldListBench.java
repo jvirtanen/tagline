@@ -30,7 +30,7 @@ public class DefaultFixFieldListBench extends Bench {
 
     private FixFieldList fields;
 
-    @Setup(Level.Iteration)
+    @Setup(Level.Trial)
     public void setUp() {
         fields = new DefaultFixFieldList();
 

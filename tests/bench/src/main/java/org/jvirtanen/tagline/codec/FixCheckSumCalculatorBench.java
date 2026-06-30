@@ -31,7 +31,7 @@ public class FixCheckSumCalculatorBench extends Bench {
 
     private FixCheckSumCalculator calculator;
 
-    @Setup(Level.Iteration)
+    @Setup(Level.Trial)
     public void setUp() {
         var bytes = new byte[256];
 

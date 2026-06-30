@@ -27,7 +27,7 @@ public class FixIntEncoderBench extends Bench {
     private ByteBuf buffer;
     private FixIntEncoder encoder;
 
-    @Setup(Level.Iteration)
+    @Setup(Level.Trial)
     public void setUp() {
         buffer = Unpooled.directBuffer(1024);
 

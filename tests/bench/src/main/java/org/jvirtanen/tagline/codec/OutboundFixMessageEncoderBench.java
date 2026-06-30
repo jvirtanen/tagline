@@ -29,12 +29,12 @@ public class OutboundFixMessageEncoderBench extends Bench {
 
     private EmbeddedChannel channel;
 
-    @Setup(Level.Iteration)
+    @Setup(Level.Trial)
     public void setUp() {
         channel = new EmbeddedChannel(new OutboundFixMessageEncoder());
     }
 
-    @TearDown(Level.Iteration)
+    @TearDown(Level.Trial)
     public void tearDown() {
         channel.finish();
     }

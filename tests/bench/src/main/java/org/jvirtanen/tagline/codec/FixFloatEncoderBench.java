@@ -29,7 +29,7 @@ public class FixFloatEncoderBench extends Bench {
     private FixFloat container;
     private FixFloatEncoder encoder;
 
-    @Setup(Level.Iteration)
+    @Setup(Level.Trial)
     public void setUp() {
         buffer = Unpooled.directBuffer(1024);
 
