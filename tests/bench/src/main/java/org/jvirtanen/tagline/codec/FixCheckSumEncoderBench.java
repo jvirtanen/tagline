@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Jussi Virtanen
+ * Copyright 2026 Jussi Virtanen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,24 +15,29 @@
  */
 package org.jvirtanen.tagline.codec;
 
-import static org.jvirtanen.tagline.codec.AsciiUtil.*;
-import static org.jvirtanen.tagline.codec.FixConstants.*;
-
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import org.jvirtanen.tagline.bench.Bench;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.Level;
+import org.openjdk.jmh.annotations.Setup;
 
-class FixCheckSumEncoder {
+public class FixCheckSumEncoderBench extends Bench {
 
-    static void encode(final int checkSum, final ByteBuf buffer) {
-        int writerIndex = buffer.writerIndex();
+    private ByteBuf buffer;
 
-        buffer.ensureWritable(8);
-        buffer.setLongLE(writerIndex, '1'
-                | (long)'0' << 8
-                | (long)EQUALS << 16
-                | (long)('0' + checkSum / 100 % 10) << 24
-                | (long)TWO_DIGITS[checkSum % 100] << 32
-                | (long)SOH << 48);
-        buffer.writerIndex(writerIndex + 7);
+    @Setup(Level.Trial)
+    public void setUp() {
+        buffer = Unpooled.directBuffer(1024);
+    }
+
+    @Benchmark
+    public ByteBuf encode() {
+        buffer.clear();
+
+        FixCheckSumEncoder.encode(123, buffer);
+
+        return buffer;
     }
 
 }
