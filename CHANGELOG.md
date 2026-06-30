@@ -2,6 +2,11 @@
 
 ## 0.2.0 (????-??-??)
 
+- Optimize `FixDate`, `FixTime`, and `FixTimestamp` encoding. The benchmark
+  results on Apple MacBook Pro (M1 Pro, 2021) indicate 32–51% reduction in
+  operation latency with `FixTimestamp` encoding benefiting the most: before
+  the changes it took 12.27 ns/op, after the changes just under half of that.
+
 - Optimize tag and BodyLength(9) encoding. The benchmark results on Apple
   MacBook Pro (M1 Pro, 2021) indicate an average of 4% reduction in the
   operation latency with larger integer values benefiting the most.

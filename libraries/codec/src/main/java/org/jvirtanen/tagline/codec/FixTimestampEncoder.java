@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Jussi Virtanen
+ * Copyright 2026 Jussi Virtanen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,16 @@
  */
 package org.jvirtanen.tagline.codec;
 
-import static org.jvirtanen.tagline.codec.AsciiUtil.*;
+import static org.jvirtanen.tagline.codec.FixTimeFormat.*;
 
 import io.netty.buffer.ByteBuf;
 
-class FixDateEncoder {
+class FixTimestampEncoder {
 
-    static void encode(final FixDate date, final ByteBuf buffer) {
-        int year = date.year();
-
-        buffer.writeLongLE(TWO_DIGITS[year / 100]
-                | (long)TWO_DIGITS[year % 100] << 16
-                | (long)TWO_DIGITS[date.month()] << 32
-                | (long)TWO_DIGITS[date.day()] << 48);
+    static void encode(final FixTimestamp timestamp, final FixTimeFormat format, final ByteBuf buffer) {
+        FixDateEncoder.encode(timestamp, buffer);
+        buffer.writeByte('-');
+        FixTimeEncoder.encode(timestamp, format, buffer);
     }
 
 }
