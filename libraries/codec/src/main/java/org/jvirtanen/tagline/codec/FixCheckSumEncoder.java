@@ -22,6 +22,7 @@ import io.netty.buffer.ByteBuf;
 class FixCheckSumEncoder {
 
     static void encode(final int checkSum, final ByteBuf buffer) {
+        buffer.writeMedium(CHECK_SUM_MEDIUM);
         buffer.writeInt(('0' + checkSum / 100 % 10) << 24
                 | ('0' + checkSum / 10 % 10) << 16
                 | ('0' + checkSum % 10) << 8

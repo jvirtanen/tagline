@@ -25,27 +25,27 @@ class FixCheckSumEncoderTest {
 
     @Test
     void oneDigit() {
-        assertEquals("001\u0001", encode(1));
+        assertEquals("10=001\u0001", encode(1));
     }
 
     @Test
     void twoDigits() {
-        assertEquals("012\u0001", encode(12));
+        assertEquals("10=012\u0001", encode(12));
     }
 
     @Test
     void threeDigits() {
-        assertEquals("123\u0001", encode(123));
+        assertEquals("10=123\u0001", encode(123));
     }
 
     @Test
     void fourDigits() {
-        assertEquals("230\u0001", encode(1230));
+        assertEquals("10=230\u0001", encode(1230));
     }
 
     @Test
     void fiveDigits() {
-        assertEquals("300\u0001", encode(12300));
+        assertEquals("10=300\u0001", encode(12300));
     }
 
     private static String encode(final int value) {

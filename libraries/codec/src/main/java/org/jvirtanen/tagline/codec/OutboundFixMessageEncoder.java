@@ -76,7 +76,6 @@ public class OutboundFixMessageEncoder extends MessageToMessageEncoder<OutboundF
     private void encodeTrailer(final ByteBuf header, final ByteBuf body) {
         int checkSum = checkSumCalculator.calculate(header) + checkSumCalculator.calculate(body);
 
-        body.writeMedium(CHECK_SUM_MEDIUM);
         FixCheckSumEncoder.encode(checkSum & FixCheckSumCalculator.MASK, body);
     }
 
