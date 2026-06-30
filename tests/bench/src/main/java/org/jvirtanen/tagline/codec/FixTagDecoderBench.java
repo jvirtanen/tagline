@@ -32,7 +32,7 @@ public class FixTagDecoderBench extends Bench {
 
     private FixTagDecoder decoder;
 
-    @Setup(Level.Iteration)
+    @Setup(Level.Trial)
     public void setUp() {
         oneDigit = getBytes("1=");
         twoDigits = getBytes("12=");

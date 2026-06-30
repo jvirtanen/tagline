@@ -31,7 +31,7 @@ public class FixFloatDecoderBench extends Bench {
 
     private FixFloat container;
 
-    @Setup(Level.Iteration)
+    @Setup(Level.Trial)
     public void setUp() {
         zeroBytes = getBytes("0.0");
         maxFastPathBytes = getBytes("9999999999999999.9");

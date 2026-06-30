@@ -26,7 +26,7 @@ public class FixTimestampDecoderBench extends Bench {
 
     private DefaultFixTimestamp timestamp;
 
-    @Setup(Level.Iteration)
+    @Setup(Level.Trial)
     public void setUp() {
         bytes = new byte[] {
             '2', '0', '2', '6', '0', '6', '2', '7',

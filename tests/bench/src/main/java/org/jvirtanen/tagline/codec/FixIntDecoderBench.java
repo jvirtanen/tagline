@@ -28,7 +28,7 @@ public class FixIntDecoderBench extends Bench {
     private byte[] maxFastPathBytes;
     private byte[] maxValueBytes;
 
-    @Setup(Level.Iteration)
+    @Setup(Level.Trial)
     public void setUp() {
         zeroBytes = getBytes("0");
         maxFastPathBytes = getBytes("999999999999999999");

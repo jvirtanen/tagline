@@ -28,7 +28,7 @@ public class FixMediumEncoderBench extends Bench {
 
     private ByteBuf buffer;
 
-    @Setup(Level.Iteration)
+    @Setup(Level.Trial)
     public void setUp() {
         buffer = Unpooled.directBuffer(1024);
     }

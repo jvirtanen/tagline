@@ -30,7 +30,7 @@ public class FixTimeEncoderBench extends Bench {
 
     private DefaultFixTimestamp timestamp;
 
-    @Setup(Level.Iteration)
+    @Setup(Level.Trial)
     public void setUp() {
         buffer = Unpooled.directBuffer(1024);
 

@@ -31,7 +31,7 @@ public class FixVersionDecoderBench extends Bench {
 
     private FixVersionDecoder decoder;
 
-    @Setup(Level.Iteration)
+    @Setup(Level.Trial)
     public void setUp() {
         fix42 = buffer("FIX.4.2\u0001");
         fixt11 = buffer("FIXT.1.1\u0001");
