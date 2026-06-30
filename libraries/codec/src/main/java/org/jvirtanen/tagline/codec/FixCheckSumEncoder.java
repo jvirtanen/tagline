@@ -15,6 +15,7 @@
  */
 package org.jvirtanen.tagline.codec;
 
+import static org.jvirtanen.tagline.codec.AsciiUtil.*;
 import static org.jvirtanen.tagline.codec.FixConstants.*;
 
 import io.netty.buffer.ByteBuf;
@@ -22,11 +23,16 @@ import io.netty.buffer.ByteBuf;
 class FixCheckSumEncoder {
 
     static void encode(final int checkSum, final ByteBuf buffer) {
-        buffer.writeMedium(CHECK_SUM_MEDIUM);
-        buffer.writeInt(('0' + checkSum / 100 % 10) << 24
-                | ('0' + checkSum / 10 % 10) << 16
-                | ('0' + checkSum % 10) << 8
-                | SOH);
+        int writerIndex = buffer.writerIndex();
+
+        buffer.ensureWritable(8);
+        buffer.setLongLE(writerIndex, '1'
+                | (long)'0' << 8
+                | (long)EQUALS << 16
+                | (long)('0' + checkSum / 100 % 10) << 24
+                | (long)TWO_DIGITS[checkSum % 100] << 32
+                | (long)SOH << 48);
+        buffer.writerIndex(writerIndex + 7);
     }
 
 }
