@@ -55,9 +55,7 @@ public class FixCheckSumCalculator {
      * @return the CheckSum(10) value
      */
     public int calculate(final ByteBuf buffer) {
-        int readerIndex = buffer.readerIndex();
-
-        return calculate(buffer, readerIndex, readerIndex + buffer.readableBytes());
+        return calculate(buffer, buffer.readerIndex(), buffer.readableBytes());
     }
 
     /**

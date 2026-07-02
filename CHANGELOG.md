@@ -2,6 +2,9 @@
 
 ## 0.2.0 (????-??-??)
 
+- Fix `FixCheckSumCalculator#calculate(ByteBuf)`, which currently fails if the
+  reader index is anything but zero.
+
 - Optimize `FixDate`, `FixTime`, and `FixTimestamp` encoding. The benchmark
   results on Apple MacBook Pro (M1 Pro, 2021) indicate 32–51% reduction in
   operation latency with `FixTimestamp` encoding benefiting the most: before
