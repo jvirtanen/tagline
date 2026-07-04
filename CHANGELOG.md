@@ -2,6 +2,11 @@
 
 ## 0.2.0 (????-??-??)
 
+- Fix Coordinated Omission (CO) in Tagline Initiator by recording the intended
+  send time rather than the actual send time. The actual send time lags the
+  intended send time when the event loop is busy processing previous messages
+  at the intended send time.
+
 - Fix `FixCheckSumCalculator#calculate(ByteBuf)`, which currently fails if the
   reader index is anything but zero.
 
