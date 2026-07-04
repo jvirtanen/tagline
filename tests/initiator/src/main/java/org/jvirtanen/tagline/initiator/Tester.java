@@ -112,6 +112,8 @@ class Tester {
 
         Promise<Void> promise = eventLoop.newPromise();
 
+        long startNanos = System.nanoTime();
+
         future = eventLoop.scheduleAtFixedRate(() -> {
             if (histogram.getTotalCount() >= messageCount) {
                 future.cancel(false);
@@ -120,10 +122,12 @@ class Tester {
                 return;
             }
 
-            if (msgSeqNum - initialMsgSeqNum >= messageCount)
+            long messageNumber = msgSeqNum - initialMsgSeqNum;
+
+            if (messageNumber >= messageCount)
                 return;
 
-            long clOrdId = System.nanoTime();
+            long clOrdId = startNanos + messageNumber * intervalNanos;
 
             var message = createMessage(msgSeqNum++, currentTimeMillis, clOrdId);
 
@@ -137,7 +141,7 @@ class Tester {
 
         @Override
         public void channelRead0(final ChannelHandlerContext ctx, final FixFieldList msg) {
-            long receiveNanoTime = System.nanoTime();
+            long receiveNanos = System.nanoTime();
 
             for (int i = 0; i < msg.size(); i++) {
                 int tag = msg.tagAt(i);
@@ -149,9 +153,9 @@ class Tester {
                 if (tag != CL_ORD_ID)
                     continue;
 
-                long sendNanoTime = value.asInt();
+                long sendNanos = value.asInt();
 
-                histogram.recordValue(receiveNanoTime - sendNanoTime);
+                histogram.recordValue(receiveNanos - sendNanos);
 
                 break;
             }
