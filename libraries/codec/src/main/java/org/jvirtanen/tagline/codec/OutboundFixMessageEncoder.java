@@ -65,9 +65,9 @@ public class OutboundFixMessageEncoder extends MessageToMessageEncoder<OutboundF
 
         var header = allocator.ioBuffer(2 + version.length() + 2 + FixMediumEncoder.MAX_LENGTH);
 
-        header.writeShort(BEGIN_STRING_SHORT);
+        header.writeShortLE(BEGIN_STRING_SHORT);
         version.encode(header);
-        header.writeShort(BODY_LENGTH_SHORT);
+        header.writeShortLE(BODY_LENGTH_SHORT);
         FixMediumEncoder.encode(msg.content().readableBytes(), SOH, header);
 
         return header;

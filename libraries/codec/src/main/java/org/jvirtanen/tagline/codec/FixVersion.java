@@ -66,7 +66,7 @@ public abstract class FixVersion {
         var beginString = buffer.toString(offset, length - 1, ISO_8859_1);
 
         if (length == 8) {
-            long bits = buffer.getLong(offset);
+            long bits = buffer.getLongLE(offset);
 
             return new Bits(beginString, bits);
         } else {
@@ -142,10 +142,8 @@ public abstract class FixVersion {
     private static long toBits(final byte[] bytes) {
         long bits = 0;
 
-        for (int i = 0; i < 8; i++) {
-            bits <<= 8;
-            bits |= bytes[i];
-        }
+        for (int i = 0; i < 8; i++)
+            bits |= (long)bytes[i] << (8 * i);
 
         return bits;
     }
@@ -204,7 +202,7 @@ public abstract class FixVersion {
 
         @Override
         void encode(final ByteBuf buffer) {
-            buffer.writeLong(value);
+            buffer.writeLongLE(value);
         }
 
         @Override
@@ -212,7 +210,7 @@ public abstract class FixVersion {
             if (length < 8)
                 return false;
 
-            return buffer.getLong(offset) == value;
+            return buffer.getLongLE(offset) == value;
         }
 
     }

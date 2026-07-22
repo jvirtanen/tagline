@@ -25,14 +25,14 @@ class FixConstants {
 
     static final byte NO = 'N';
 
-    static final short YES_SHORT = 'Y' << 8 | SOH;
+    static final short YES_SHORT = 'Y' | SOH << 8;
 
-    static final short NO_SHORT = 'N' << 8 | SOH;
+    static final short NO_SHORT = 'N' | SOH << 8;
 
-    static final short BEGIN_STRING_SHORT = '8' << 8 | '=';
+    static final short BEGIN_STRING_SHORT = '8' | '=' << 8;
 
-    static final short BODY_LENGTH_SHORT = '9' << 8 | '=';
+    static final short BODY_LENGTH_SHORT = '9' | '=' << 8;
 
-    static final int CHECK_SUM_MEDIUM = '1' << 16 | '0' << 8 | '=';
+    static final int CHECK_SUM_MEDIUM = '1' | '0' << 8 | '=' << 16;
 
 }

@@ -74,7 +74,7 @@ public class InboundFixMessageDecoder extends ByteToMessageDecoder {
 
         int startIndex = in.readerIndex();
 
-        if (in.getShort(startIndex) != BEGIN_STRING_SHORT) {
+        if (in.getShortLE(startIndex) != BEGIN_STRING_SHORT) {
             decodeGarbled(in, out);
 
             return;
@@ -92,7 +92,7 @@ public class InboundFixMessageDecoder extends ByteToMessageDecoder {
             if (readableBytes < bodyLengthValueIndex - startIndex)
                 return;
 
-            if (in.getShort(bodyLengthIndex) != BODY_LENGTH_SHORT) {
+            if (in.getShortLE(bodyLengthIndex) != BODY_LENGTH_SHORT) {
                 decodeGarbled(in, out);
 
                 return;
@@ -113,7 +113,7 @@ public class InboundFixMessageDecoder extends ByteToMessageDecoder {
             if (readableBytes < endIndex - startIndex)
                 return;
 
-            if (in.getMedium(trailerIndex) != CHECK_SUM_MEDIUM) {
+            if (in.getMediumLE(trailerIndex) != CHECK_SUM_MEDIUM) {
                 decodeGarbled(in, out);
 
                 return;

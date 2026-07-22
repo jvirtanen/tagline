@@ -22,7 +22,7 @@ import io.netty.buffer.ByteBuf;
 class FixBooleanEncoder {
 
     static void encode(final boolean value, final ByteBuf buffer) {
-        buffer.writeShort(value ? YES_SHORT : NO_SHORT);
+        buffer.writeShortLE(value ? YES_SHORT : NO_SHORT);
     }
 
 }
