@@ -113,7 +113,7 @@ public class InboundFixMessageDecoder extends ByteToMessageDecoder {
             if (readableBytes < endIndex - startIndex)
                 return;
 
-            if (in.getMedium(trailerIndex) != CHECK_SUM_MEDIUM) {
+            if (in.getMediumLE(trailerIndex) != CHECK_SUM_MEDIUM) {
                 decodeGarbled(in, out);
 
                 return;
