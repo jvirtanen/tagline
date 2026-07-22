@@ -29,7 +29,7 @@ class FixConstants {
 
     static final short NO_SHORT = 'N' | SOH << 8;
 
-    static final short BEGIN_STRING_SHORT = '8' << 8 | '=';
+    static final short BEGIN_STRING_SHORT = '8' | '=' << 8;
 
     static final short BODY_LENGTH_SHORT = '9' << 8 | '=';
 

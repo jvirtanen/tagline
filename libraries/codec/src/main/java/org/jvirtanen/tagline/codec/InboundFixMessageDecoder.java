@@ -74,7 +74,7 @@ public class InboundFixMessageDecoder extends ByteToMessageDecoder {
 
         int startIndex = in.readerIndex();
 
-        if (in.getShort(startIndex) != BEGIN_STRING_SHORT) {
+        if (in.getShortLE(startIndex) != BEGIN_STRING_SHORT) {
             decodeGarbled(in, out);
 
             return;
