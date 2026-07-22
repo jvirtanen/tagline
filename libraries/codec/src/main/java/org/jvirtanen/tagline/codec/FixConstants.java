@@ -31,7 +31,7 @@ class FixConstants {
 
     static final short BEGIN_STRING_SHORT = '8' | '=' << 8;
 
-    static final short BODY_LENGTH_SHORT = '9' << 8 | '=';
+    static final short BODY_LENGTH_SHORT = '9' | '=' << 8;
 
     static final int CHECK_SUM_MEDIUM = '1' << 16 | '0' << 8 | '=';
 

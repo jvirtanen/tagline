@@ -92,7 +92,7 @@ public class InboundFixMessageDecoder extends ByteToMessageDecoder {
             if (readableBytes < bodyLengthValueIndex - startIndex)
                 return;
 
-            if (in.getShort(bodyLengthIndex) != BODY_LENGTH_SHORT) {
+            if (in.getShortLE(bodyLengthIndex) != BODY_LENGTH_SHORT) {
                 decodeGarbled(in, out);
 
                 return;
