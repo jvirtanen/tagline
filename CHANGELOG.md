@@ -1,6 +1,6 @@
 # Release Notes
 
-## 0.2.0 (????-??-??)
+## 0.2.0 (2026-09-09)
 
 - Fix Coordinated Omission (CO) in Tagline Initiator by recording the intended
   send time rather than the actual send time. The actual send time lags the
