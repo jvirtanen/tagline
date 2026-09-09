@@ -52,7 +52,7 @@ See [more use cases](documentation/handbook.md#usage) in Tagline Handbook.
 ## Performance
 
 Tagline incurs as little performance overhead as possible. To illustrate, it
-encodes an Order Single (D) message in 100 ns and decodes one in 56 ns on an
+encodes an Order Single (D) message in 92 ns and decodes one in 56 ns on an
 Apple MacBook Pro (M3 Max, 2023) with Eclipse Temurin 25 and macOS Tahoe.
 
 Read [more about performance](documentation/handbook.md#performance) in Tagline

@@ -333,8 +333,8 @@ decoding a received message indexes its fields but does not decode their
 values; that will only happen lazily on demand.
 
 Benchmark                          | Latency
------------------------------------|---------:
-Encode an Order Single (D) message | 100 ns/op
+-----------------------------------|--------:
+Encode an Order Single (D) message | 92 ns/op
 Decode an Order Single (D) message | 56 ns/op
 
 The benchmarks below drill down into adding Int and Float fields into an
